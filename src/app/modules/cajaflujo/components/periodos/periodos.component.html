@@ -1,0 +1,37 @@
+<div class="mx-8 w-full">
+
+  <button-m nombre="Agregar Periodo" tipo="agregar" (click)="cambiarRuta()"></button-m>
+
+  <div class="rounded shadow-2xl bg-yellow-50 p-8 mt-8 w-1/2">
+
+    <h1 class="text-2xl font-bold text-blue-900" >
+      Lista de Periodos
+    </h1>
+
+    <table class="table-auto divide-y-4 divide-gray-200 divide-solid">
+      <thead>
+        <tr class="mx-auto">
+          <th class="px-2 text-center font-semibold text-gray-500 uppercase tracking-wider w-1/6 py-2">Año</th>
+          <th class="px-2 text-center font-semibold text-gray-500 uppercase tracking-wider w-1/6 py-2">Fragmentación</th>
+          <th class="px-2 text-center font-semibold text-gray-500 uppercase tracking-wider w-1/6 py-2">Descripción</th>
+          <th class="px-2 text-center font-semibold text-gray-500 uppercase tracking-wider py-2">Acciónes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="px-2 text-center font-light">Intro to CSS</td>
+          <td class="px-2 text-center font-light">Adam</td>
+          <td class="px-2 text-center font-light">858</td>
+          <td class="px-2 text-center font-light">
+            <button-m nombre="Crear Flujo" tipo="accion"  ></button-m>
+            <button-m nombre="Flujo de Caja" tipo="accion" ></button-m>
+          </td>
+        </tr>
+
+
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
