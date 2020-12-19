@@ -1,9 +1,9 @@
 
-<label class="tracking-wider font-semibold text-lg"> {{label}}:
-  <input [type]="type" class="focus:outline-none rounded shadow p-2 border-2 border-green-500 w-full focus:border-indigo-500 font-normal" >
-  <select name="" id="">
-    <option value="">1999</option>
+<label class="tracking-wider font-semibold text-lg my-2"> {{label}}:
+  <input [type]="type" class="focus:outline-none rounded shadow p-2 border-2 border-green-500 w-full focus:border-indigo-500 font-normal my-2" *ngIf="type == 'select'? false : true">
 
+  <select class="focus:outline-none rounded shadow p-2 border-2 border-green-500 w-full focus:border-indigo-500 font-normal my-2" *ngIf=" type == 'select' ? true : false">
+    <option value="" *ngFor="let a of dataSelect"> {{ a }} </option> <!--    [2001,2002,2003]-->
   </select>
 
 

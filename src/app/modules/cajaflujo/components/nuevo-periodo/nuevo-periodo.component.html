@@ -1,9 +1,17 @@
-<div class="w-full h-full">
-  <div class="border shadow mx-auto w-1/2 p-4">
+<div class="w-full h-screen">
 
-    <input-m label="Año" type="text"></input-m>
-    <input-m label="Fragmentación" type="text"></input-m>
-    <input-m label="Descripción" type="text"></input-m>
-  </div>
+    <div class="rounded shadow-xl mx-auto xl:w-3/12 lg:w-4/12 md:w-6/12 sm:w-8/12 p-4 py-8 ">
+
+      <input-m label="Año" type="select" [dataSelect]="anos"></input-m>
+      <input-m label="Fragmentación" type="select" [dataSelect]="fragmentaciones"></input-m>
+
+      <div class="flex justify-between mt-4">
+        <button-m nombre="Cancelar" tipo="cancelar" (click)="cambiarRuta()"> </button-m>
+        <button-m nombre="Registrar" tipo="registrar"> </button-m>
+      </div>
+
+
+    </div>
+
 </div>
 

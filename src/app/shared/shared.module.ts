@@ -13,6 +13,9 @@ import { InputMComponent } from './input-m/input-m.component';
   imports: [
     CommonModule
   ],
-  exports: [ButtonMComponent, InputMComponent]
+  exports: [
+    ButtonMComponent,
+    InputMComponent
+  ]
 })
 export class SharedModule { }
