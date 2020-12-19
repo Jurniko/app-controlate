@@ -1,9 +1,9 @@
 <div class="w-full h-screen">
 
-    <div class="rounded shadow-xl mx-auto xl:w-3/12 lg:w-4/12 md:w-6/12 sm:w-8/12 p-4 py-8 ">
+    <form class="rounded shadow-xl mx-auto xl:w-3/12 lg:w-4/12 md:w-6/12 sm:w-8/12 p-4 py-8 " [formGroup]="form" (ngSubmit)="onSubmit()">
 
-      <input-m label="Año" type="select" [dataSelect]="anos"></input-m>
-      <input-m label="Fragmentación" type="select" [dataSelect]="fragmentaciones"></input-m>
+      <input-m label="Año" type="select" [dataSelect]="anos" [controlForm]="form" controlName="ano"></input-m>
+      <input-m label="Fragmentación" type="select" [dataSelect]="fragmentaciones" [controlForm]="form" controlName="fragmentacion"></input-m>
 
       <div class="flex justify-between mt-4">
         <button-m nombre="Cancelar" tipo="cancelar" (click)="cambiarRuta()"> </button-m>
@@ -11,7 +11,7 @@
       </div>
 
 
-    </div>
+    </form>
 
 </div>
 

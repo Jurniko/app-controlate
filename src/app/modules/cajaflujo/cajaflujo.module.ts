@@ -6,6 +6,7 @@ import { CajaflujoComponent } from './cajaflujo.component';
 import { PeriodosComponent } from './components/periodos/periodos.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { NuevoPeriodoComponent } from './components/nuevo-periodo/nuevo-periodo.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -13,7 +14,9 @@ import { NuevoPeriodoComponent } from './components/nuevo-periodo/nuevo-periodo.
   imports: [
     CommonModule,
     CajaflujoRoutingModule,
-    SharedModule
+    SharedModule,
+    ReactiveFormsModule
+
   ],
   exports: []
 })

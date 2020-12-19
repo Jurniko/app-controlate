@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,12 +10,22 @@ import { Router } from '@angular/router';
 export class NuevoPeriodoComponent implements OnInit {
   anos : [number] = [0];
   fragmentaciones : string[] = [];
-  constructor(private route:Router) { }
+
+  form:FormGroup = new FormGroup({}) ;
+  constructor(private route:Router, private formBuilder : FormBuilder) { }
 
   ngOnInit(): void {
 
     this.anos = this.generarAños();
     this.fragmentaciones = this.generarFragmentaciones();
+
+    this.form = this.formBuilder.group({
+      ano: ['',Validators.required],
+      fragmentacion : ['',Validators.required]
+    })
+
+    this.form.get('ano')?.valueChanges.subscribe(dara =>{console.log(dara)})
+
 
   }
 
@@ -33,7 +44,11 @@ export class NuevoPeriodoComponent implements OnInit {
     return fragmentacion;
   }
 
-  cambiarRuta(){
+  cambiarRuta() : void{
     this.route.navigate(['cajaflujo/mis-periodos'])
+  }
+
+  onSubmit() : void{
+    console.log(this.form.value)
   }
 }

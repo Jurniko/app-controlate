@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ButtonMComponent } from './button-m/button-m.component';
 import { InputMComponent } from './input-m/input-m.component';
 
+import { ReactiveFormsModule } from '@angular/forms';
+
 
 
 @NgModule({
@@ -11,7 +13,8 @@ import { InputMComponent } from './input-m/input-m.component';
     InputMComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    ReactiveFormsModule
   ],
   exports: [
     ButtonMComponent,
