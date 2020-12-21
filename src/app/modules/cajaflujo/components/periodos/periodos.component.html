@@ -13,17 +13,15 @@
         <tr class="mx-auto">
           <th class="px-2 text-center font-semibold text-gray-500 uppercase tracking-wider w-1/6 py-2">Año</th>
           <th class="px-2 text-center font-semibold text-gray-500 uppercase tracking-wider w-1/6 py-2">Fragmentación</th>
-          <th class="px-2 text-center font-semibold text-gray-500 uppercase tracking-wider w-1/6 py-2">Descripción</th>
           <th class="px-2 text-center font-semibold text-gray-500 uppercase tracking-wider py-2">Acciónes</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td class="px-2 text-center font-light">Intro to CSS</td>
-          <td class="px-2 text-center font-light">Adam</td>
-          <td class="px-2 text-center font-light">858</td>
+        <tr *ngFor="let periodo of periodos">
+          <td class="px-2 text-center font-light">{{periodo?.ano}}</td>
+          <td class="px-2 text-center font-light">{{periodo?.fragmentacion}}</td>
           <td class="px-2 text-center font-light">
-            <button-m nombre="Crear Flujo" tipo="accion"  ></button-m>
+            <button-m nombre="Crear Flujo" tipo="accion" (click)="crearFlujo( periodo?.id )" ></button-m>
             <button-m nombre="Flujo de Caja" tipo="accion" ></button-m>
           </td>
         </tr>

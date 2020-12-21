@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "flujo-caja-756df": {
+      "hosting": {
+        "app-controlate": [
+          "flujo-caja-756df"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+<div class="w-full h-full">
+  <div class="mx-auto ">
+    <table class="table-auto divide-solid">
+      <thead>
+        <caption class="font-semibold text-blue-700">
+
+        <tr class="mx-auto divide-x-2 divide-blue-100 flex ">
+          <div colspan="2" class="box w-64"> Detalles </div>
+          <div class="px-2 text-center font-semibold text-gray-500 uppercase tracking-wider w-80  truncate"
+            *ngFor="let particion of fragmentacion.seccion ; let seccionID = index">
+            <button-m tipo="registrar" nombre="+" (click)="agregarValores(seccionID)"></button-m> <br>
+
+            {{particion.meses}}
+          </div>
+        </tr>
+      </caption>
+      </thead>
+      <!--
+        PREDEFINIR EN VARIABLES, PADDING PARA SEMESTRAL, MENSUAL, ETC
+      -->
+      <tbody class="w-full">
+          <caption class="font-semibold text-blue-700 text-left " *ngFor="let fila of filas; let filaID = index" > <!-- CADA FILA DEBE TENER UN ID -->
+            {{fila.titulo}}
+            <tr  *ngFor="let subtitulo of fila.subtitulos ; let subtituloID = index" class="flex"><!-- class="divide-x-2 divide-blue-100"  -->
+              <div class="pl-8 text-center font-light text-blue-500 truncate w-64">
+                {{subtitulo}}
+
+              </div>
+              <div class="px-2 text-center font-light w-80" *ngFor="let seccion of fragmentacion.seccion ; let seccionID = index"> <!-- SEMESTRAL TIENE 2 SECCIONES, ESTO YA ESTA ESTABLECIDO EN EL JSON-->
+                <input type="number" class="border-2 border-blue-300 shadow p-1 focus:outline-none focus:border-indigo-500" (change)="valorInput(seccionID,filaID,subtituloID,$event.target.value)" #var >
+                 <!--  FILA PARA SABER SI ESTA EN INGRESOS, EGRESOS O ETC | SUBTITULO SI SE REFIERE APORTES, VENTA U OTROS ... | SECCION SI PERTENECE A LA SECCIÓN UNO O DOS, O TRES ... -->
+              </div>
+            </tr>
+          </caption>
+
+      </tbody>
+    </table>
+
+  </div>
