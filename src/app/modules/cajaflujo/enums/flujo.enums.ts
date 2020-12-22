@@ -28,7 +28,7 @@ let propiedadInicial : PropiedadesFlujo = {
 export function generarFlujoInicial(tipoFragmentacion:string = "Mensual") : Flujo{
   tipoFragmentacion = tipoFragmentacion.toLowerCase();
 
-  let flujoInicial:Flujo ;
+  let flujoInicial:Flujo | undefined ;
 
   switch(tipoFragmentacion){
     case "mensual":
@@ -70,6 +70,6 @@ export function generarFlujoInicial(tipoFragmentacion:string = "Mensual") : Fluj
       }
       break;
   }
-  return flujoInicial;
+  return flujoInicial as Flujo;
 
 }

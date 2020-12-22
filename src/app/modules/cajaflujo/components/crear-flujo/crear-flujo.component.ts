@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import { filter, map } from 'rxjs/operators';
 import { Flujo, PropiedadesFlujo } from '../../interfaces/flujo';
+import { Fragmentacion } from '../../interfaces/fragmentacion';
+import { Periodo } from '../../interfaces/periodo';
+import { PropiedadFlujo } from '../../interfaces/propiedadFlujo';
+import { CajaflujoService } from '../../services/cajaflujo.service';
 
 @Component({
   selector: 'app-crear-flujo',
@@ -8,10 +13,10 @@ import { Flujo, PropiedadesFlujo } from '../../interfaces/flujo';
   styleUrls: ['./crear-flujo.component.scss']
 })
 export class CrearFlujoComponent implements OnInit {
-  idPeriodo ?: number | string
-  indicesConValores? : any [][];
+  idPeriodo :  string = '';
+  indicesConValores : any [][] = [];
   flujoModoArray ?: any[][][];
-  fragmentacion  = {
+  fragmentacion : Fragmentacion [] = [{
     nombre : "Semestral",
     seccion:[
       {
@@ -21,102 +26,62 @@ export class CrearFlujoComponent implements OnInit {
         meses:"Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre"
       },
     ],
-  }
+  }]
 
-  filas = [
-    {
-      titulo : "Ingresos",
-      subtitulos: ["Aportes","Ventas en Efectivo","Otros"]
-    },
-    {
-      titulo : "Egresos",
-      subtitulos: ["Compra de Mercancía","Salarios","Consumo de Energía", "Impuestos","Servicios Públicos","Alquiler","Publicidad","Depreciación total","Otros"]
-    },
-    {
-      titulo : "Financiamiento",
-      subtitulos: ["Préstamos recibidos","Pago de Préstamos","Amortización"]
-    }
-  ]
+  propiedades : PropiedadFlujo[] = [];
+  flujo : Flujo = {seccion:[]};
 
-
-   flujo : Flujo = {
-    periodo_id: 'XVRetrcvzxCVZXCvxczv123',
-
-    seccion: [
-      {
-
-        ingresos:{
-            aportes: 100,
-            ventas:200,
-            otros:15000
-          },
-
-        egresos:{
-            compraMercancia: 2000,
-            salarios:2600,
-            consumoEnergia:150,
-            impuestos:123,
-            servicosPublicos:150,
-            alquiler:120,
-            publicidad:500,
-            depreciacion:1500,
-            otros:600
-        },
-
-        financiamiento : {
-          prestamos : 500,
-          pago : 600,
-          amortizacion :200
-        }
-        //...
-      },
-      {
-
-        ingresos:{
-            aportes: 500,
-            ventas:400,
-            otros:13000
-          },
-
-        egresos:{
-            compraMercancia: 8000,
-            salarios:2900,
-            consumoEnergia:0,
-            impuestos:0,
-            servicosPublicos:0,
-            alquiler:0,
-            publicidad:500,
-            depreciacion:1500,
-            otros:600
-        },
-
-        financiamiento : {
-          prestamos : 500,
-          pago : 600,
-          amortizacion :200
-        }
-        //...
-      }
-    ]
-  }
-
-  constructor(private rutaActiva:ActivatedRoute ) { }
+  constructor(private rutaActiva:ActivatedRoute, private cajaFlujoService: CajaflujoService ) { }
 
   ngOnInit(): void {
     this.rutaActiva.params.subscribe((params:Params)=>{
-      idPeriodo : params.id
+      this.idPeriodo = params.id
     })
-    this.flujoModoArray = this.obtenerFlujoInicial();
+
+    this.cajaFlujoService.getFlujo(this.idPeriodo).then((res:any) => { res.forEach((doc:any) => {
+      this.flujo = doc.data();
+      this.flujoModoArray = this.pintarFlujo(this.flujo);
+      //console.log(doc.id, " => ", doc.data());
+    })})
+    this.getPeriodo$(this.idPeriodo).subscribe(res=>{
+      let a : Periodo= res.data();
+      this.getFragmentacion$(a.fragmentacion)
+      ;
+
+    })
+
+    this.getPropiedades$();
+
   }
 
-  obtenerFlujoInicial() : any[][][]{
+  getPeriodo$(id:string){
+    console.log("Dentro")
+    return this.cajaFlujoService.getPeriodo(id)
+
+  }
+  getFragmentacion$(nombre?:string){
+    this.cajaFlujoService.getFragmentos().subscribe(res=>{
+
+      res = res.filter( (e:Fragmentacion) => e.nombre == nombre)
+      console.log("FRAGMENTACION !!!", res)
+      this.fragmentacion = res;
+    })
+  }
+  getPropiedades$(){
+    this.cajaFlujoService.getPropiedades().subscribe(res =>{
+      this.propiedades = res;
+    })
+  }
+
+
+  pintarFlujo(flujo:Flujo) : any[][][]{
     let dividido:any;
     let indiceSeccion = 0;
     let indiceFila = 0;
     let indicePropiedad = 0 ;
     let valor = 0;
-    console.log(this.flujo.seccion)
-    for( let i = 0 ; i < this.flujo.seccion.length ; i++){ // el i = hace referencia a que seccion es
+    console.log(flujo.seccion)
+    for( let i = 0 ; i < flujo.seccion.length ; i++){ // el i = hace referencia a que seccion es
       if(!dividido){ dividido = [] }else{ // Creamos la primera forma flujoModoArray[indiceSeccion]
         dividido.push();
       }
@@ -126,13 +91,13 @@ export class CrearFlujoComponent implements OnInit {
       * Forma de nuestro Array para pintar el HTML
       * flujoModoArray[seccionID][filaID][subtituloID] -> devolverá el valor del input
       */
-      Object.keys(this.flujo.seccion[i]).map((nomPropiedad:string, inFila:number) => { // Ingresamos a las propiedades de la FILA
+      Object.keys(flujo.seccion[i]).map((nomPropiedad:string, inFila:number) => { // Ingresamos a las propiedades de la FILA
         if(!dividido[indiceSeccion]){ dividido[indiceSeccion] = [] }else{  // Creamos la segunda forma flujoModoArray[iSeccion][iFila]
           dividido[indiceSeccion].push([]);
         }
         //console.log(dividido)
         indiceFila =  inFila ;
-        Object.values(this.flujo.seccion[i][nomPropiedad]).map((valorPropiedad, inPropiedad)=>{ // Ingresamos a los valores de las PROPEIDADES
+        Object.values( flujo.seccion[i][nomPropiedad] ).map((valorPropiedad, inPropiedad)=>{ // Ingresamos a los valores de las PROPEIDADES
           if(!dividido[indiceSeccion][indiceFila]){ dividido[indiceSeccion][indiceFila] = [valorPropiedad] }else{  // Creamos la tercera forma flujoModoArray[iSeccion][iFila][iPropiedad]
             dividido[indiceSeccion][indiceFila].push(valorPropiedad);
           }

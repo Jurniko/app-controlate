@@ -3,7 +3,7 @@ import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument 
 import { map } from 'rxjs/operators';
 import { Flujo } from '../interfaces/flujo';
 import { Periodo } from '../interfaces/periodo';
-
+import { generarFragmentacion, generarPropiedadesFlujo } from '../enums/init.enums'
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +14,8 @@ export class CajaflujoService {
 
   fCollectionFlujo = this.angularFirestore.collection('flujo')
   fCollectionPeriodo = this.angularFirestore.collection('periodo');
+  fCollectionFragmentacion = this.angularFirestore.collection('fragmentacion');
+  fCollectionPropiedades= this.angularFirestore.collection('propiedades');
 
 
   crearPeriodo(periodo:Periodo){
@@ -24,7 +26,31 @@ export class CajaflujoService {
     return this.fCollectionFlujo.add(flujo);
   }
 
-  getPeriodo(id:string|number){
+  getFlujo(id:string){
+    return this.fCollectionFlujo.ref.where('periodo_id',"==",id).get();
+  }
+
+  getPeriodo(id:string){
+    //this.fCollectionPeriodo.ref.where('id','==',id).get()
+    return this.fCollectionPeriodo.doc(id).get();
+  }
+
+  getFragmentos(){
+    return this.fCollectionFragmentacion.snapshotChanges().pipe(
+      map((actions:any) => actions.map((a:any) => {
+        const data = a.payload.doc.data();
+        const id = a.payload.doc.id;
+        return { id, ...data };
+      })))
+  }
+
+  getPropiedades(){
+    return this.fCollectionPropiedades.snapshotChanges().pipe(
+      map((actions:any) => actions.map((a:any) => {
+        const data = a.payload.doc.data();
+        const id = a.payload.doc.id;
+        return { id, ...data };
+      })))
   }
 
   getPeriodos(){
@@ -35,5 +61,19 @@ export class CajaflujoService {
         return { id, ...data };
       })))
   }
+
+  initData(){
+      let fragmentaciones = generarFragmentacion() ;
+      fragmentaciones.map(e=>{
+        this.fCollectionFragmentacion.add(e);
+      })
+      let propiedadesFlujo = generarPropiedadesFlujo();
+      propiedadesFlujo.map(e=>{
+      this.fCollectionPropiedades.add(e);
+      })
+
+  }
+
+
 
 }
