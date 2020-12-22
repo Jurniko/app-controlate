@@ -94,29 +94,31 @@ export function generarPropiedadesFlujo() : PropiedadFlujo[]{
   {
     titulo : "Egresos",
     subtitulos: [
-    "Compra de Mercancía",
-    "Salarios",
-    "Consumo de Energía",
-    "Impuestos",
-    "Servicios Públicos",
     "Alquiler",
-    "Publicidad",
+    "Compra de Mercancía",
+    "Consumo de Energía",
     "Depreciación total",
-    "Otros"]
+    "Impuestos",
+    "Salarios",
+    "Publicidad",
+    "Servicios Públicos",
+    "xOtros" // OBservar
+  ]
   },
   {
     titulo : "Financiamiento",
     subtitulos: [
-      "Préstamos recibidos",
+    "Amortización",
     "Pago de Préstamos",
-    "Amortización"]
+    "Préstamos recibidos",
+  ]
   },
   {
     titulo : "Ingresos",
     subtitulos: [
-      "Aportes",
+    "Aportes",
     "Ventas en Efectivo",
-    "Otros"]
+    "xOtros"]  // OBservar
   }]
 
   return propiedades;

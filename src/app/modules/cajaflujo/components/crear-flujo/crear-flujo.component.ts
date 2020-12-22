@@ -37,17 +37,15 @@ export class CrearFlujoComponent implements OnInit {
     this.rutaActiva.params.subscribe((params:Params)=>{
       this.idPeriodo = params.id
     })
-
+    //this.cajaFlujoService.initData();
     this.cajaFlujoService.getFlujo(this.idPeriodo).then((res:any) => { res.forEach((doc:any) => {
       this.flujo = doc.data();
       this.flujoModoArray = this.pintarFlujo(this.flujo);
       //console.log(doc.id, " => ", doc.data());
     })})
     this.getPeriodo$(this.idPeriodo).subscribe(res=>{
-      let a : Periodo= res.data();
-      this.getFragmentacion$(a.fragmentacion)
-      ;
-
+      let a : any = res.data();
+      this.getFragmentacion$(a.fragmentacion);
     })
 
     this.getPropiedades$();
@@ -69,7 +67,8 @@ export class CrearFlujoComponent implements OnInit {
   }
   getPropiedades$(){
     this.cajaFlujoService.getPropiedades().subscribe(res =>{
-      this.propiedades = res;
+       
+       this.propiedades = res.sort((a,b) => a.titulo < b.titulo ? -1 : a.titulo > b.titulo ? 1 : 0 ) // Ordenar en funcion a las propiedad // FIX 1 : Problemas para pintar
     })
   }
 
@@ -138,7 +137,7 @@ export class CrearFlujoComponent implements OnInit {
         if(j==0){ // fila o titulo
           Object.keys(myflujoSeccion).map((nombreFila:string,indiceFila:number)=>{ // Sacamos las propiedades, y entraremos en la primera
             //console.log(seleccionarSeccion[valor] )
-            if( indiceFila == indicesPertenecientesSeccion[i][j] ){ // Verificamos que el indice del titulo del flujo(object) sea igual al inidice ingresado por filaID
+            if( indiceFila == indicesPertenecientesSeccion[i][j] ){ // Verificamos que el indice del titulo del flujo(object) sea igual al indice ingresado por filaID
               nombreTitulo = nombreFila;
               //console.log(nombreFila)
             }
@@ -160,6 +159,10 @@ export class CrearFlujoComponent implements OnInit {
   }
 
   valorInput(seccionID : number, filaID : number ,subtituloID : number, valor:number|string){
+    console.log( this.propiedades, "Propiedades")
+
+    console.log(this.propiedades)
+    console.log(seccionID,filaID,subtituloID,valor)
     if(!this.indicesConValores){ // Cuando no inicializa aún
       this.indicesConValores = [[seccionID,filaID,subtituloID,valor]]
     }
