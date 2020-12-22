@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
+import { generarFlujoInicial } from '../../enums/flujo.enums';
+import { generarFragmentacion, generarPropiedadesFlujo } from '../../enums/init.enums';
 import { Flujo, PropiedadesFlujo } from '../../interfaces/flujo';
 import { Fragmentacion } from '../../interfaces/fragmentacion';
 import { Periodo } from '../../interfaces/periodo';
@@ -16,20 +18,9 @@ export class CrearFlujoComponent implements OnInit {
   idPeriodo :  string = '';
   indicesConValores : any [][] = [];
   flujoModoArray ?: any[][][];
-  fragmentacion : Fragmentacion [] = [{
-    nombre : "Semestral",
-    seccion:[
-      {
-        meses:"Enero,Febrero,Marzo,Abril,Mayo,Junio"
-      },
-      {
-        meses:"Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre"
-      },
-    ],
-  }]
-
-  propiedades : PropiedadFlujo[] = [];
-  flujo : Flujo = {seccion:[]};
+  fragmentacion : Fragmentacion [] = generarFragmentacion("Semestral");
+  propiedades : PropiedadFlujo[] = generarPropiedadesFlujo();
+  flujo : Flujo = generarFlujoInicial("Semestral");
 
   constructor(private rutaActiva:ActivatedRoute, private cajaFlujoService: CajaflujoService ) { }
 
@@ -37,41 +28,8 @@ export class CrearFlujoComponent implements OnInit {
     this.rutaActiva.params.subscribe((params:Params)=>{
       this.idPeriodo = params.id
     })
-    //this.cajaFlujoService.initData();
-    this.cajaFlujoService.getFlujo(this.idPeriodo).then((res:any) => { res.forEach((doc:any) => {
-      this.flujo = doc.data();
-      this.flujoModoArray = this.pintarFlujo(this.flujo);
-      //console.log(doc.id, " => ", doc.data());
-    })})
-    this.getPeriodo$(this.idPeriodo).subscribe(res=>{
-      let a : any = res.data();
-      this.getFragmentacion$(a.fragmentacion);
-    })
-
-    this.getPropiedades$();
-
+    this.flujoModoArray  =this.pintarFlujo(this.flujo);
   }
-
-  getPeriodo$(id:string){
-    console.log("Dentro")
-    return this.cajaFlujoService.getPeriodo(id)
-
-  }
-  getFragmentacion$(nombre?:string){
-    this.cajaFlujoService.getFragmentos().subscribe(res=>{
-
-      res = res.filter( (e:Fragmentacion) => e.nombre == nombre)
-      console.log("FRAGMENTACION !!!", res)
-      this.fragmentacion = res;
-    })
-  }
-  getPropiedades$(){
-    this.cajaFlujoService.getPropiedades().subscribe(res =>{
-       
-       this.propiedades = res.sort((a,b) => a.titulo < b.titulo ? -1 : a.titulo > b.titulo ? 1 : 0 ) // Ordenar en funcion a las propiedad // FIX 1 : Problemas para pintar
-    })
-  }
-
 
   pintarFlujo(flujo:Flujo) : any[][][]{
     let dividido:any;
@@ -115,14 +73,13 @@ export class CrearFlujoComponent implements OnInit {
 
   agregarValores(seccionID : number){
     let myflujoSeccion:any;
-    let indicesPertenecientesSeccion : any [][];
-    indicesPertenecientesSeccion  = this.indicesConValores.filter((data)=> data[0] == seccionID) //[0] hacer referencia a la seccion en la que se encuentra
-      .map(res=>{
-      res.splice(0,1)
-      return res;
+    let indicesPertenecientesSeccion : any ;
+    indicesPertenecientesSeccion  = this.indicesConValores;
+    indicesPertenecientesSeccion  =  indicesPertenecientesSeccion.filter((data : any [])=> data[0] == seccionID) //[0] hacer referencia a la seccion en la que se encuentra
+    .map((res : any[] )=>{
+    res.splice(0,1)
+    return res;
     }) // Eliminamos el primer indice ( Seccion ), ya que sabemos en que seccion está
-
-    console.log("inputs",indicesPertenecientesSeccion )
 
     myflujoSeccion = this.flujo.seccion[seccionID] // Ingresamos a la sección en la que se pulso AGREGAR
     //console.log(Object.keys(seleccionarSeccion)) // se hace un array las propiedades de los flujos(Ingresos, Egresos, financiamiento) - nos interesa su indice
@@ -152,22 +109,20 @@ export class CrearFlujoComponent implements OnInit {
         }else if( j==2 ){ // valor
           //console.log(nombreTitulo,nombrePropiedad, indicesPertenecientesSeccion[i][j])
           myflujoSeccion[nombreTitulo][nombrePropiedad] = indicesPertenecientesSeccion[i][j]; // le Actualizamos el valor
-
         }
       }
     }
+
+    // ======================  CALCULOS DE TOTAL ==============================================
+    console.log(this.flujo)
   }
 
   valorInput(seccionID : number, filaID : number ,subtituloID : number, valor:number|string){
-    console.log( this.propiedades, "Propiedades")
 
-    console.log(this.propiedades)
-    console.log(seccionID,filaID,subtituloID,valor)
     if(!this.indicesConValores){ // Cuando no inicializa aún
       this.indicesConValores = [[seccionID,filaID,subtituloID,valor]]
     }
     this.indicesConValores.push([seccionID,filaID,subtituloID,valor])
-    //console.log(this.indicesConValores )
   }
 
 }
