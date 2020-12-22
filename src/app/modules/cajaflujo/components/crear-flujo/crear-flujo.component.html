@@ -27,7 +27,7 @@
 
               </div>
               <div class="px-2 text-center font-light w-80" *ngFor="let seccion of fragmentacion.seccion ; let seccionID = index"> <!-- SEMESTRAL TIENE 2 SECCIONES, ESTO YA ESTA ESTABLECIDO EN EL JSON-->
-                <input type="number" class="border-2 border-blue-300 shadow p-1 focus:outline-none focus:border-indigo-500" (change)="valorInput(seccionID,filaID,subtituloID,$event.target.value)" #var >
+                <input type="number" class="border-2 border-blue-300 shadow p-1 focus:outline-none focus:border-indigo-500" (change)="valorInput(seccionID,filaID,subtituloID,$event.target.value)" [value]="flujoModoArray[seccionID][filaID][subtituloID]" >
                  <!--  FILA PARA SABER SI ESTA EN INGRESOS, EGRESOS O ETC | SUBTITULO SI SE REFIERE APORTES, VENTA U OTROS ... | SECCION SI PERTENECE A LA SECCIÓN UNO O DOS, O TRES ... -->
               </div>
             </tr>

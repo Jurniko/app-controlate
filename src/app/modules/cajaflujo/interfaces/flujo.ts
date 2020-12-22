@@ -25,6 +25,6 @@ export interface PropiedadesFlujo{
     financiamiento : {
     prestamos : number
     pago : number
-    Amortizacion :number
+    amortizacion :number
   }
 }

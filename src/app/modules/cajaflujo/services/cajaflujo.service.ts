@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
+import { Flujo } from '../interfaces/flujo';
 import { Periodo } from '../interfaces/periodo';
 
 
@@ -11,12 +12,16 @@ export class CajaflujoService {
 
   constructor(private angularFirestore:AngularFirestore) {}
 
-
+  fCollectionFlujo = this.angularFirestore.collection('flujo')
   fCollectionPeriodo = this.angularFirestore.collection('periodo');
 
 
   crearPeriodo(periodo:Periodo){
     return this.fCollectionPeriodo.add(periodo);
+  }
+
+  crearFlujo(flujo:Flujo){
+    return this.fCollectionFlujo.add(flujo);
   }
 
   getPeriodo(id:string|number){
