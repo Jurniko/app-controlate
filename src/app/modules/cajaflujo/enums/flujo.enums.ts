@@ -38,6 +38,9 @@ export function generarFlujoInicial(tipoFragmentacion:string = "Mensual") : Fluj
   switch(tipoFragmentacion){
     case "mensual":
       flujoInicial = {
+        inversion: 0,
+        prestamo:0,
+        tasa:0,
         seccion: [
           clonarObjeto(propiedadInicial), //Enero
           clonarObjeto(propiedadInicial), //Febrero
@@ -56,6 +59,9 @@ export function generarFlujoInicial(tipoFragmentacion:string = "Mensual") : Fluj
       break;
     case "bimestral":
       flujoInicial = {
+        inversion: 0,
+        prestamo:0,
+        tasa:0,
         seccion:[
           clonarObjeto(propiedadInicial), //Enero, Febrero
           clonarObjeto(propiedadInicial), //Marzo,Abril
@@ -68,6 +74,9 @@ export function generarFlujoInicial(tipoFragmentacion:string = "Mensual") : Fluj
       break;
     case "semestral":
       flujoInicial = {
+        inversion: 0,
+        prestamo:0,
+        tasa:0,
         seccion: [
           clonarObjeto(propiedadInicial), //Enero, Febrero, Marzo, Abril, Mayo, Junio
           clonarObjeto(propiedadInicial), //Julio,Agosto, Septiembre, Octubre, Noviembre , Diciembre

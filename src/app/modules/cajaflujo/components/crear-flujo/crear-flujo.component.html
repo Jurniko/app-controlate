@@ -1,12 +1,26 @@
-<button class="bg-gray-900  text-white py-2 px-6 rounded-full">
+<button class="bg-gray-900  text-white py-2 px-6 rounded-full" (click)="estaModoFlujo=!estaModoFlujo ; calculoSaldos()">
   Siguiente
 </button>
 <div class="w-full h-full">
+
+  <div class="font-semibold text-blue-700 text-left py-4">
+    <label > Inversion Total:
+      <input type="number" class="border-2 border-blue-300 shadow p-1 focus:outline-none focus:border-indigo-500" (change)="this.flujo.inversion=$event.target.value ; cuadroAmortizacion()" [value]="this.flujo.inversion">
+    </label> <br> <br>
+    <label> Prestamo:
+      <input type="number" class="border-2 border-blue-300 shadow p-1 focus:outline-none focus:border-indigo-500" (change)="this.flujo.prestamo=$event.target.value ; cuadroAmortizacion()" [value]="this.flujo.prestamo">
+    </label>
+    <label> Tasa de Interes Anual:
+      <input type="number" class="border-2 border-blue-300 shadow p-1 focus:outline-none focus:border-indigo-500" (change)="convertirTasaInteres($event.target.value) ; cuadroAmortizacion()" >
+    </label>
+
+    <button-m tipo="registrar" nombre="+" (click)="comenzarFlujo()"></button-m> <br> <!-- INICIAR CON EL PINTADO ! -->
+
+  </div>
   <div class="mx-auto ">
-    <table class="table-auto divide-solid">
+    <table class="table-auto divide-solid ">
       <thead>
         <caption class="font-semibold text-blue-700">
-
         <tr class="mx-auto divide-x-2 divide-blue-100 flex ">
           <div colspan="2" class="box w-64"> Detalles </div>
           <div class="px-2 text-center font-semibold text-gray-500 uppercase tracking-wider w-80  truncate"
@@ -21,7 +35,7 @@
       <!--
         PREDEFINIR EN VARIABLES, PADDING PARA SEMESTRAL, MENSUAL, ETC
       -->
-      <tbody class="w-full">
+      <tbody class="w-full" [hidden]="!estaModoFlujo">
           <caption class="font-semibold text-blue-700 text-left " *ngFor="let fila of propiedades; let filaID = index" > <!-- CADA FILA DEBE TENER UN ID -->
             {{fila.titulo}}
             <tr  *ngFor="let subtitulo of fila.subtitulos ; let subtituloID = index" class="flex"><!-- class="divide-x-2 divide-blue-100"  -->
@@ -30,14 +44,26 @@
 
               </div>
               <div class="px-2 text-center font-light w-80" *ngFor="let seccion of fragmentacion[0].seccion ; let seccionID = index"> <!-- SEMESTRAL TIENE 2 SECCIONES, ESTO YA ESTA ESTABLECIDO EN EL JSON-->
-                <input type="number" class="border-2 border-blue-300 shadow p-1 focus:outline-none focus:border-indigo-500" (change)="valorInput(seccionID,filaID,subtituloID,$event.target.value)" [value]="flujoModoArray[seccionID][filaID][subtituloID]" >
+                <input type="number" class="border-2 border-blue-300 shadow p-1 focus:outline-none focus:border-indigo-500" (change)="valorInput(seccionID,filaID,subtituloID,$event.target.value)" [value]="ingresoPeriodo0 == true ? flujoModoArray[seccionID][filaID][subtituloID] : 0" >
                  <!--  FILA PARA SABER SI ESTA EN INGRESOS, EGRESOS O ETC | SUBTITULO SI SE REFIERE APORTES, VENTA U OTROS ... | SECCION SI PERTENECE A LA SECCIÓN UNO O DOS, O TRES ... -->
               </div>
             </tr>
           </caption>
       </tbody>
+      <hr class="h-1 bg-green-400 my-4 border-none"  [hidden]="!estaModoFlujo">
+
+      <tfoot [hidden]="!estaModoFlujo" >
+        <caption  *ngFor="let fila of propiedades; let filaID = index"  > <!-- CADA FILA DEBE TENER UN ID -->
+          <tr class="flex"><!-- class="divide-x-2 divide-blue-100"  -->
+            <div class="pl-8 font-semibold text-blue-700 text-left truncate w-64">
+              Total {{fila.titulo}}
+            </div>
+            <div class="px-2 text-center font-light w-80"  *ngFor="let seccion of fragmentacion[0].seccion ; let seccionID = index"  > <!-- SEMESTRAL TIENE 2 SECCIONES, ESTO YA ESTA ESTABLECIDO EN EL JSON-->
+              <input type="number" class="border-2 border-blue-300 shadow p-1 focus:outline-none focus:border-indigo-500 bg-gray-200" [value]="total.seccion[seccionID][filaID]" disabled="true" >
+            </div>
+          </tr>
+        </caption>
+      </tfoot>
     </table>
-
   </div>
-
 

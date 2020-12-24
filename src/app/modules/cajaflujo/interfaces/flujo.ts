@@ -1,6 +1,9 @@
 export interface Flujo{
     id?: string | number
     periodo_id?: string
+    inversion : number
+    prestamo : number
+    tasa : number
     seccion: PropiedadesFlujo[]
 }
 

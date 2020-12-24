@@ -1,8 +1,10 @@
+import { IfStmt } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { generarFlujoInicial } from '../../enums/flujo.enums';
-import { generarFragmentacion, generarPropiedadesFlujo } from '../../enums/init.enums';
+import { generarFlujoResultado, generarFragmentacion, generarPropiedadesFlujo,generarTotalFlujo } from '../../enums/init.enums';
+import { FlujoResultado } from '../../interfaces/cajaflujo';
 import { Flujo, PropiedadesFlujo } from '../../interfaces/flujo';
 import { Fragmentacion } from '../../interfaces/fragmentacion';
 import { Periodo } from '../../interfaces/periodo';
@@ -15,20 +17,44 @@ import { CajaflujoService } from '../../services/cajaflujo.service';
   styleUrls: ['./crear-flujo.component.scss']
 })
 export class CrearFlujoComponent implements OnInit {
+  estaModoFlujo : boolean = true ;
+  ingresoPeriodo0 : boolean = false;
+  // ======== VARIABLES DE FLUJO ===========
   idPeriodo :  string = '';
   indicesConValores : any [][] = [];
   flujoModoArray ?: any[][][];
-  fragmentacion : Fragmentacion [] = generarFragmentacion("Semestral");
+  fragmentacion : Fragmentacion [] = generarFragmentacion("Bimestral");
   propiedades : PropiedadFlujo[] = generarPropiedadesFlujo();
-  flujo : Flujo = generarFlujoInicial("Semestral");
+  flujo : Flujo = generarFlujoInicial("Bimestral");
 
+  total  = generarTotalFlujo("Bimestral");
+  // ======== VARIABLES RESULTADOS ===========
+  flujoResultado : FlujoResultado = generarFlujoResultado("Bimestral");
+
+  /* {
+    seccion: [
+      {ingresos : 100,
+       egresos : 200,
+       financiamiento : 500},
+      {ingresos : 600,
+        egresos : 200,
+        financiamiento : 100}
+    ]
+  }
+  */
   constructor(private rutaActiva:ActivatedRoute, private cajaFlujoService: CajaflujoService ) { }
 
   ngOnInit(): void {
     this.rutaActiva.params.subscribe((params:Params)=>{
       this.idPeriodo = params.id
     })
-    this.flujoModoArray  =this.pintarFlujo(this.flujo);
+    this.cuadroAmortizacion();
+
+  }
+
+  comenzarFlujo(){
+    this.flujoModoArray = this.pintarFlujo(this.flujo);
+    this.ingresoPeriodo0 = true;
   }
 
   pintarFlujo(flujo:Flujo) : any[][][]{
@@ -66,12 +92,9 @@ export class CrearFlujoComponent implements OnInit {
     return dividido;
   }
 
-
-
-
-
-
   agregarValores(seccionID : number){
+    let totalSeccion;
+    let idTitulo : number = 0;
     let myflujoSeccion:any;
     let indicesPertenecientesSeccion : any ;
     indicesPertenecientesSeccion  = this.indicesConValores;
@@ -91,31 +114,76 @@ export class CrearFlujoComponent implements OnInit {
 
     for(let i = 0 ; i <  indicesPertenecientesSeccion.length ; i++){
       for(let j = 0 ; j < indicesPertenecientesSeccion[i].length ; j++){
-        if(j==0){ // fila o titulo
+        if(j==0){ // fila o titulo [x, , ]
           Object.keys(myflujoSeccion).map((nombreFila:string,indiceFila:number)=>{ // Sacamos las propiedades, y entraremos en la primera
             //console.log(seleccionarSeccion[valor] )
+            //console.log(nombreFila)
             if( indiceFila == indicesPertenecientesSeccion[i][j] ){ // Verificamos que el indice del titulo del flujo(object) sea igual al indice ingresado por filaID
               nombreTitulo = nombreFila;
               //console.log(nombreFila)
+              idTitulo = indiceFila;
             }
           })
-        }else if( j==1){ // propiedad
+        }else if( j==1){ // propiedad [ , x , ]
           Object.keys(myflujoSeccion[nombreTitulo]).map((nomPropiedad:string,indicePropiedad:number)=>{
             if( indicePropiedad == indicesPertenecientesSeccion[i][j]){ // Verificamos que el indice de la propiedad del flujo(object) sea igual al inidice ingresado por subitituloID
               //console.log(nombrePropiedad)
               nombrePropiedad = nomPropiedad // -> nombPropiedad, para que no haya problemas
+
             }
           })
         }else if( j==2 ){ // valor
           //console.log(nombreTitulo,nombrePropiedad, indicesPertenecientesSeccion[i][j])
           myflujoSeccion[nombreTitulo][nombrePropiedad] = indicesPertenecientesSeccion[i][j]; // le Actualizamos el valor
+          /*
+          * ENTRA POR CADA TITULO !!!!!
+          ! NO FUNCIONA EL -= Number() en vez de restar SUMA!!
+          */
+          let valorIngresado = +indicesPertenecientesSeccion[i][j];
+
+
+          this.total.seccion[seccionID][idTitulo] +=  valorIngresado; // Almacenamos el total sumando por cada titulo
+
+          // ===================== FLUJO ECONOMICO =================
+          if(nombreTitulo != "financiamiento"){
+            nombreTitulo == "ingresos" ? this.total.seccion[seccionID][3] +=  +valorIngresado :  this.total.seccion[seccionID][3] -= +valorIngresado
+            // SI ES INGRESO  SUMARA Y SI ES EGRESO RESTARA
+            if(nombrePropiedad == "depreciacion"){ // SE LE SUMARA Y SE LE RESTARA SU VALOR - > PORQUE ES UN GASTO QUE NO SE DESEMBOLSA
+
+              this.total.seccion[seccionID][3] +=  +valorIngresado
+            }
+          }
+
         }
       }
     }
+      // ===================== FLUJO FINANCIERO  =================
 
-    // ======================  CALCULOS DE TOTAL ==============================================
-    console.log(this.flujo)
+
+      this.total?.seccion[seccionID][4]  = this.total?.seccion[seccionID][3];
+      console.log(this.total?.seccion[seccionID][3] , - this.flujo.seccion[seccionID].financiamiento.amortizacion , - this.flujo.seccion[seccionID].financiamiento.pago)
+      this.total?.seccion[seccionID][4] -= (this.flujo.seccion[seccionID].financiamiento.amortizacion + this.flujo.seccion[seccionID].financiamiento.pago)
+      console.log(this.total?.seccion[seccionID][4])
+      console.log(this.flujo)
   }
+
+  calculoSaldos(){
+    this.total?.seccion.map((e : any, indiceSeccion)=>{
+      if(e[5]==0 && indiceSeccion == 0){ // cuando se esta calculando primera vez
+        e[5] = this.flujo.prestamo - this.flujo.inversion // EL SALDO INICIAL PRIMER PERIODO = Prestamo - Inversion
+        console.log(e[5] , " Primer saldo inicial periodo 1 ")
+        e[6] = e[5] + e[4]; // Saldo final = saldo inicial ([5])+ flujo de caja financiero ([4])
+
+      }else{
+        console.log("segundo periodo, saldo inicial", this.total?.seccion[indiceSeccion-1][6])
+        e[5] = this.total?.seccion[indiceSeccion-1][6]; // Una seccion anterir y que tome saldo final [6]
+        e[6] = e[5] + e[4];
+      }
+
+    })
+    console.log(this.total , " TOTAL DE TOTALES")
+  }
+
 
   valorInput(seccionID : number, filaID : number ,subtituloID : number, valor:number|string){
 
@@ -125,4 +193,72 @@ export class CrearFlujoComponent implements OnInit {
     this.indicesConValores.push([seccionID,filaID,subtituloID,valor])
   }
 
+  cuadroAmortizacion(){
+    let indiceOfFinanciamiento;
+    this.propiedades.forEach((propiedad, indiceProp)=>{
+      if(propiedad.titulo.toLowerCase() == "financiamiento" ){
+        indiceOfFinanciamiento = indiceProp
+      }
+    })
+
+    /*
+    {ingresos : 100, i 4
+       egresos : 200, i 5
+       financiamiento : 500}, i 6
+
+      flujoCajaEconomico : number, i 3
+      flujoCajaFinanciero: number, i 4
+      saldoInicial :number, i 5
+      saldoFinal   : number i 6
+    */
+
+    let numPeriodos:number = 12 ;
+    let saldoInicial:number = +this.flujo.prestamo; // EL SIGNO +this.flujo -> arregla el problema u.u
+    let tasainteres:number = +this.flujo.tasa;  //TASA DE INTERES MENSUAL
+    let interes:number;
+    let cuota = ((saldoInicial*tasainteres*Math.pow(1+tasainteres,numPeriodos))/ (Math.pow(+tasainteres+1,numPeriodos)-1)).toFixed(3)
+    let amortizacion:number;
+    let saldoFinal:number;
+
+    this.flujo.seccion = this.flujo.seccion.map((e, indiceSeccion)=>{
+
+      interes = tasainteres*saldoInicial;
+      amortizacion = +cuota - interes;
+      saldoFinal = saldoInicial-amortizacion;
+
+      this.flujo.seccion[indiceSeccion].financiamiento.pago = interes;
+      this.flujo.seccion[indiceSeccion].financiamiento.amortizacion = amortizacion;
+
+
+      //console.log(saldoInicial, interes,cuota,amortizacion,saldoFinal)
+
+      saldoInicial=saldoFinal
+
+      // e.financiamiento.amortizacion=100
+      return  e ;
+    })
+    //console.log(indiceOfFinanciamiento)
+
+  }
+
+  convertirTasaInteres(tasaAnual : number, tipoFragmentacion : string = "Mensual" ){
+    tipoFragmentacion = tipoFragmentacion.toLowerCase();
+    this.flujo.tasa = tasaAnual;
+    console.log(tipoFragmentacion)
+    switch(tipoFragmentacion){
+      case "mensual":
+        this.flujo.tasa = (Math.pow(+tasaAnual+1,1/12)-1)
+        console.log(this.flujo.tasa,"TASA CONVERTIDA")
+        break;
+      case "bimestral":
+        this.flujo.tasa = ( Math.pow(+tasaAnual+1,1/6)-1)
+        break;
+      case "semestral":
+
+        this.flujo.tasa = ( Math.pow(+tasaAnual+1,1/2)-1)
+
+        break;
+    }
+
+  }
 }
