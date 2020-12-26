@@ -4,6 +4,8 @@ export interface Flujo{
     inversion : number
     prestamo : number
     tasa : number
+    year? : number
+    tipoFragmentacion ?: string
     seccion: PropiedadesFlujo[]
 }
 

@@ -8,10 +8,11 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { NuevoPeriodoComponent } from './components/nuevo-periodo/nuevo-periodo.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CrearFlujoComponent } from './components/crear-flujo/crear-flujo.component';
+import { TerminarFlujoComponent } from './components/terminar-flujo/terminar-flujo.component';
 
 
 @NgModule({
-  declarations: [CajaflujoComponent, PeriodosComponent, NuevoPeriodoComponent, CrearFlujoComponent],
+  declarations: [CajaflujoComponent, PeriodosComponent, NuevoPeriodoComponent, CrearFlujoComponent, TerminarFlujoComponent],
   imports: [
     CommonModule,
     CajaflujoRoutingModule,

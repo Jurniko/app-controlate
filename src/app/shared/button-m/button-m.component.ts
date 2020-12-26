@@ -34,6 +34,9 @@ export class ButtonMComponent implements OnInit {
       case "accion":
         this.color = "py-2 px-8 bg-white hover:text-green-200 hover:border-green-200 rounded border-2 border-green-300 text-green-300 font-semibold shadow-lg mx-2 focus:outline-none "
       break;
+      case "momento":
+        this.color = "py-2 px-16 bg-gradient-to-r from-blue-500 to-green-400 rounded-full text-white text-xl shadow-2xl hover:from-gray-50 hover:to-blue-400  focus:outline-none"
+        break;
     }
 
   }

@@ -5,87 +5,7 @@ import { Fragmentacion} from "../interfaces/fragmentacion";
 import { PropiedadFlujo } from "../interfaces/propiedadFlujo";
 
 export function generarFragmentacion(fragmentacion:string="Mensual") : Fragmentacion []{
-/* CUANDO SE TRABAJO CON FIRESTORE
-  let fragmentos:Fragmentacion[]  =
-  [
-    {
-      nombre : "Semestral",
-      seccion:[
-          {
-            meses:"Enero,Febrero,Marzo,Abril,Mayo,Junio"
-          },
-          {
-            meses:"Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre"
-          },
-      ]
-    },
-    {
-      nombre : "Mensual",
-      seccion:[
-          {
-            meses:"Enero,"
-          },
-          {
-            meses:"Febrero"
-          },
-          {
-            meses:"Marzo"
-          },
-          {
-            meses:"Abril"
-          },
-          {
-            meses:"Mayo"
-          },
-          {
-            meses:"Junio"
-          },
-          {
-            meses:"Julio"
-          },
-          {
-            meses:"Agosto"
-          },
-          {
-            meses:"Septiembre"
-          },
-          {
-            meses:"Octubre"
-          },
-          {
-            meses:"Noviembre"
-          },
-          {
-            meses:"Diciembre"
-          }
-      ]
-    },
-    {
-      nombre : "Bimestral",
-      seccion:[
-          {
-            meses:"Enero,Febrero"
-          },
-          {
-            meses:"Marzo,Abril"
-          },
-          {
-            meses:"Mayo,Junio"
-          },
-          {
-            meses:"Julio,Agosto"
-          },
-          {
-            meses:"Septiembre,Octubre"
-          },
-          {
-            meses:"Noviembre,Diciembre"
-          }
-      ]
-    },
 
-]
-*/
   let fragmento:Fragmentacion[] = [];
   fragmentacion = fragmentacion.toLowerCase();
   switch(fragmentacion){
@@ -216,6 +136,22 @@ export function generarPropiedadesFlujo() : PropiedadFlujo[]{
 
   return propiedades;
 }
+
+
+export function generarPropiedadesTotal() : object[] {
+  let propiedades = [
+    {titulo: "Total Ingresos"},
+    {titulo: "Total Egresos"},
+    {titulo: "Total Financiamiento"},
+    {titulo: "Flujo Caja Economico"},
+    {titulo: "Flujo Caja Financiero"},
+    {titulo: "Saldo Inicial"},
+    {titulo: "Saldo Final"}
+  ]
+    return propiedades;
+}
+
+
 
 
 export function generarTotalFlujo(tipoFragmentacion :string ="Mensual"){

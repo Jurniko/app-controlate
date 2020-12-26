@@ -58,14 +58,8 @@ export class NuevoPeriodoComponent implements OnInit {
   onSubmit() : void{
     console.log(this.form.value)
 
-    this.cajaflujoService.crearPeriodo(this.form.value)
-    .then((response:any)=>{
-      let flujoInicial = generarFlujoInicial(this.form.get('fragmentacion')?.value);
-      flujoInicial.periodo_id = response.id;
-      this.cajaflujoService.crearFlujo(flujoInicial)
-      this.route.navigate(['cajaflujo/mis-periodos'])
-    })
-    .catch(e=>{console.log("UN ERROR",e)})
+    this.route.navigate(['cajaflujo/mis-periodos'])
+
 
   }
 }

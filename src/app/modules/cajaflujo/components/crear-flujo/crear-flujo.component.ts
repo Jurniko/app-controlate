@@ -1,9 +1,9 @@
 import { IfStmt } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { generarFlujoInicial } from '../../enums/flujo.enums';
-import { generarEstilosFlujo, generarFlujoResultado, generarFragmentacion, generarPropiedadesFlujo,generarTotalFlujo } from '../../enums/init.enums';
+import { generarEstilosFlujo, generarFlujoResultado, generarFragmentacion, generarPropiedadesFlujo,generarPropiedadesTotal,generarTotalFlujo } from '../../enums/init.enums';
 import { FlujoResultado } from '../../interfaces/cajaflujo';
 import { Flujo, PropiedadesFlujo } from '../../interfaces/flujo';
 import { Fragmentacion } from '../../interfaces/fragmentacion';
@@ -31,8 +31,11 @@ export class CrearFlujoComponent implements OnInit {
   // ======== VARIABLES RESULTADOS ===========
   flujoResultado : FlujoResultado = generarFlujoResultado("Bimestral");
   parametroFragmentacion : string = "Bimestral";
+  propiedadesTotal = generarPropiedadesTotal();
   //===========VARIABLE DE ESTILO=============
   css = generarEstilosFlujo("Bimestral")
+  terminarFlujo: boolean = false
+  rellenadoTerminado:boolean = false;
   /* {
     seccion: [
       {ingresos : 100,
@@ -44,15 +47,26 @@ export class CrearFlujoComponent implements OnInit {
     ]
   }
   */
-  constructor(private rutaActiva:ActivatedRoute, private cajaFlujoService: CajaflujoService ) { }
+  constructor(private rutaActiva:ActivatedRoute, private cajaFlujoService: CajaflujoService, private route:Router) { }
 
   ngOnInit(): void {
     this.rutaActiva.params.subscribe((params:Params)=>{
       console.log(params)
+      this.flujo.year = params.year;
+      this.flujo.tipoFragmentacion = params.tipoFragmentacion;
+      this.parametroFragmentacion = params.tipoFragmentacion;
       this.idPeriodo = params.id
     })
-    this.cuadroAmortizacion();
+    this.init();
 
+  }
+
+  init(){
+    this.fragmentacion = generarFragmentacion(this.parametroFragmentacion);
+    this.flujo  = generarFlujoInicial(this.parametroFragmentacion);
+    this.total  = generarTotalFlujo(this.parametroFragmentacion);
+    this.flujoResultado = generarFlujoResultado(this.parametroFragmentacion);
+    this.css = generarEstilosFlujo(this.parametroFragmentacion)
   }
 
   comenzarFlujo(){
@@ -96,7 +110,6 @@ export class CrearFlujoComponent implements OnInit {
   }
 
   agregarValores(seccionID : number){
-    let totalSeccion;
     let idTitulo : number = 0;
     let myflujoSeccion:any;
     let indicesPertenecientesSeccion : any ;
@@ -155,7 +168,6 @@ export class CrearFlujoComponent implements OnInit {
               this.total.seccion[seccionID][3] +=  +valorIngresado
             }
           }
-
         }
       }
     }
@@ -238,21 +250,21 @@ export class CrearFlujoComponent implements OnInit {
       console.log("si",saldoInicial )
       console.log("sf",saldoFinal )
       if(this.parametroFragmentacion.toLowerCase() == "semestral" && mes == 6){
-        this.flujo.seccion[indiceSeccion].financiamiento.pago =  Number(acumuladorIntereses.toFixed(4));
-        this.flujo.seccion[indiceSeccion].financiamiento.amortizacion =  Number(acumuladorIntereses.toFixed(4));
+        this.flujo.seccion[indiceSeccion].financiamiento.pago =  acumuladorIntereses;
+        this.flujo.seccion[indiceSeccion].financiamiento.amortizacion = acumuladorIntereses;
         acumuladorIntereses = 0 ;
         acumuladorAmortizacion = 0;
         indiceSeccion ++ ;
       }else if(this.parametroFragmentacion.toLowerCase() == "bimestral" && (mes%2) == 0){ // El resto es 0 o divisible entre dos
 
-        this.flujo.seccion[indiceSeccion].financiamiento.pago = Number(acumuladorIntereses.toFixed(4));
-        this.flujo.seccion[indiceSeccion].financiamiento.amortizacion = Number(acumuladorAmortizacion.toFixed(4));
+        this.flujo.seccion[indiceSeccion].financiamiento.pago =acumuladorIntereses;
+        this.flujo.seccion[indiceSeccion].financiamiento.amortizacion = acumuladorAmortizacion;
         acumuladorIntereses = 0 ;
         acumuladorAmortizacion = 0;
         indiceSeccion ++ ;
       }else if(this.parametroFragmentacion.toLowerCase() == "mensual"){
-        this.flujo.seccion[indiceSeccion].financiamiento.pago = Number(acumuladorIntereses.toFixed(4));
-        this.flujo.seccion[indiceSeccion].financiamiento.amortizacion = Number(acumuladorAmortizacion.toFixed(4));
+        this.flujo.seccion[indiceSeccion].financiamiento.pago = acumuladorIntereses;
+        this.flujo.seccion[indiceSeccion].financiamiento.amortizacion = acumuladorAmortizacion;
         acumuladorIntereses = 0 ;
         acumuladorAmortizacion = 0;
         indiceSeccion ++ ;
@@ -269,5 +281,9 @@ export class CrearFlujoComponent implements OnInit {
     tipoFragmentacion = tipoFragmentacion.toLowerCase();
     this.flujo.tasa = (Math.pow(+tasaAnual+1,1/12)-1)
     console.log(this.flujo.tasa,"TASA CONVERTIDA")
+  }
+
+  atras(){
+    this.route.navigate(['cajaflujo/'])
   }
 }
