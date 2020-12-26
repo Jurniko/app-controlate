@@ -47,7 +47,12 @@ export class NuevoPeriodoComponent implements OnInit {
   }
 
   cambiarRuta() : void{
-    this.route.navigate(['cajaflujo/mis-periodos'])
+    let year = this.form.get('ano')?.value
+    let tipoFragmentacion = this.form.get('fragmentacion')?.value
+    this.route.navigate([`cajaflujo/${year}/${tipoFragmentacion}`])
+  }
+  regresar() : void{
+    this.route.navigate(['/'])
   }
 
   onSubmit() : void{

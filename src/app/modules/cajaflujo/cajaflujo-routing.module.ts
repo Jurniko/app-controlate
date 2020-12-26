@@ -7,10 +7,8 @@ import { NuevoPeriodoComponent } from './components/nuevo-periodo/nuevo-periodo.
 import { PeriodosComponent } from './components/periodos/periodos.component';
 
 const routes: Routes = [
-  { path: '', component: CajaflujoComponent },
-  { path: 'mis-periodos' , component: PeriodosComponent},
-  { path: 'nuevo-periodo' , component: NuevoPeriodoComponent},
-  { path: 'crear-flujo/:id', component: CrearFlujoComponent}
+  { path: '', component: NuevoPeriodoComponent},
+  { path: ':year/:tipoFragmentacion', component: CrearFlujoComponent}
 ];
 
 @NgModule({

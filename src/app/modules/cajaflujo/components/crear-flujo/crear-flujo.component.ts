@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { generarFlujoInicial } from '../../enums/flujo.enums';
-import { generarFlujoResultado, generarFragmentacion, generarPropiedadesFlujo,generarTotalFlujo } from '../../enums/init.enums';
+import { generarEstilosFlujo, generarFlujoResultado, generarFragmentacion, generarPropiedadesFlujo,generarTotalFlujo } from '../../enums/init.enums';
 import { FlujoResultado } from '../../interfaces/cajaflujo';
 import { Flujo, PropiedadesFlujo } from '../../interfaces/flujo';
 import { Fragmentacion } from '../../interfaces/fragmentacion';
@@ -30,7 +30,9 @@ export class CrearFlujoComponent implements OnInit {
   total  = generarTotalFlujo("Bimestral");
   // ======== VARIABLES RESULTADOS ===========
   flujoResultado : FlujoResultado = generarFlujoResultado("Bimestral");
-
+  parametroFragmentacion : string = "Bimestral";
+  //===========VARIABLE DE ESTILO=============
+  css = generarEstilosFlujo("Bimestral")
   /* {
     seccion: [
       {ingresos : 100,
@@ -46,6 +48,7 @@ export class CrearFlujoComponent implements OnInit {
 
   ngOnInit(): void {
     this.rutaActiva.params.subscribe((params:Params)=>{
+      console.log(params)
       this.idPeriodo = params.id
     })
     this.cuadroAmortizacion();
@@ -57,7 +60,7 @@ export class CrearFlujoComponent implements OnInit {
     this.ingresoPeriodo0 = true;
   }
 
-  pintarFlujo(flujo:Flujo) : any[][][]{
+  pintarFlujo(flujo:any) : any[][][]{ //flujo:Flujo :c
     let dividido:any;
     let indiceSeccion = 0;
     let indiceFila = 0;
@@ -141,7 +144,6 @@ export class CrearFlujoComponent implements OnInit {
           */
           let valorIngresado = +indicesPertenecientesSeccion[i][j];
 
-
           this.total.seccion[seccionID][idTitulo] +=  valorIngresado; // Almacenamos el total sumando por cada titulo
 
           // ===================== FLUJO ECONOMICO =================
@@ -179,9 +181,8 @@ export class CrearFlujoComponent implements OnInit {
         e[5] = this.total?.seccion[indiceSeccion-1][6]; // Una seccion anterir y que tome saldo final [6]
         e[6] = e[5] + e[4];
       }
-
     })
-    console.log(this.total , " TOTAL DE TOTALES")
+    console.log(this.total , "TOTAL DE TOTALES")
   }
 
 
@@ -201,6 +202,7 @@ export class CrearFlujoComponent implements OnInit {
       }
     })
 
+
     /*
     {ingresos : 100, i 4
        egresos : 200, i 5
@@ -215,50 +217,57 @@ export class CrearFlujoComponent implements OnInit {
     let numPeriodos:number = 12 ;
     let saldoInicial:number = +this.flujo.prestamo; // EL SIGNO +this.flujo -> arregla el problema u.u
     let tasainteres:number = +this.flujo.tasa;  //TASA DE INTERES MENSUAL
-    let interes:number;
+    let interes:number = 0;
     let cuota = ((saldoInicial*tasainteres*Math.pow(1+tasainteres,numPeriodos))/ (Math.pow(+tasainteres+1,numPeriodos)-1)).toFixed(3)
-    let amortizacion:number;
-    let saldoFinal:number;
+    let amortizacion:number = 0;
+    let saldoFinal:number = 0;
 
-    this.flujo.seccion = this.flujo.seccion.map((e, indiceSeccion)=>{
+    let acumuladorIntereses:number = 0;
+    let acumuladorAmortizacion:number = 0;
 
+    let indiceSeccion:number = 0 ;
+    for(let mes = 1 ; mes <= 12 ; mes++){
       interes = tasainteres*saldoInicial;
       amortizacion = +cuota - interes;
       saldoFinal = saldoInicial-amortizacion;
 
-      this.flujo.seccion[indiceSeccion].financiamiento.pago = interes;
-      this.flujo.seccion[indiceSeccion].financiamiento.amortizacion = amortizacion;
+      acumuladorIntereses += interes;
+      acumuladorAmortizacion += amortizacion;
+      console.log("interes",interes )
+      console.log("amor",amortizacion )
+      console.log("si",saldoInicial )
+      console.log("sf",saldoFinal )
+      if(this.parametroFragmentacion.toLowerCase() == "semestral" && mes == 6){
+        this.flujo.seccion[indiceSeccion].financiamiento.pago =  Number(acumuladorIntereses.toFixed(4));
+        this.flujo.seccion[indiceSeccion].financiamiento.amortizacion =  Number(acumuladorIntereses.toFixed(4));
+        acumuladorIntereses = 0 ;
+        acumuladorAmortizacion = 0;
+        indiceSeccion ++ ;
+      }else if(this.parametroFragmentacion.toLowerCase() == "bimestral" && (mes%2) == 0){ // El resto es 0 o divisible entre dos
 
+        this.flujo.seccion[indiceSeccion].financiamiento.pago = Number(acumuladorIntereses.toFixed(4));
+        this.flujo.seccion[indiceSeccion].financiamiento.amortizacion = Number(acumuladorAmortizacion.toFixed(4));
+        acumuladorIntereses = 0 ;
+        acumuladorAmortizacion = 0;
+        indiceSeccion ++ ;
+      }else if(this.parametroFragmentacion.toLowerCase() == "mensual"){
+        this.flujo.seccion[indiceSeccion].financiamiento.pago = Number(acumuladorIntereses.toFixed(4));
+        this.flujo.seccion[indiceSeccion].financiamiento.amortizacion = Number(acumuladorAmortizacion.toFixed(4));
+        acumuladorIntereses = 0 ;
+        acumuladorAmortizacion = 0;
+        indiceSeccion ++ ;
+      }
 
-      //console.log(saldoInicial, interes,cuota,amortizacion,saldoFinal)
+      saldoInicial = saldoFinal
 
-      saldoInicial=saldoFinal
-
-      // e.financiamiento.amortizacion=100
-      return  e ;
-    })
-    //console.log(indiceOfFinanciamiento)
-
+    }
+    console.log("RESULTADO DE AMORTIZACIONES", this.flujo)
   }
+
 
   convertirTasaInteres(tasaAnual : number, tipoFragmentacion : string = "Mensual" ){
     tipoFragmentacion = tipoFragmentacion.toLowerCase();
-    this.flujo.tasa = tasaAnual;
-    console.log(tipoFragmentacion)
-    switch(tipoFragmentacion){
-      case "mensual":
-        this.flujo.tasa = (Math.pow(+tasaAnual+1,1/12)-1)
-        console.log(this.flujo.tasa,"TASA CONVERTIDA")
-        break;
-      case "bimestral":
-        this.flujo.tasa = ( Math.pow(+tasaAnual+1,1/6)-1)
-        break;
-      case "semestral":
-
-        this.flujo.tasa = ( Math.pow(+tasaAnual+1,1/2)-1)
-
-        break;
-    }
-
+    this.flujo.tasa = (Math.pow(+tasaAnual+1,1/12)-1)
+    console.log(this.flujo.tasa,"TASA CONVERTIDA")
   }
 }

@@ -94,7 +94,7 @@ export function generarFragmentacion(fragmentacion:string="Mensual") : Fragmenta
         nombre : "Mensual",
         seccion:[
             {
-              meses:"Enero,"
+              meses:"Enero"
             },
             {
               meses:"Febrero"
@@ -208,7 +208,7 @@ export function generarPropiedadesFlujo() : PropiedadFlujo[]{
     titulo : "Financiamiento",
     subtitulos: [
     "Préstamos recibidos",
-    "Pago de Préstamos",
+    "Intereses",
     "Amortización",
   ]
   },
@@ -329,4 +329,38 @@ export function generarFlujoResultado( tipoFragmentacion : string = "Mensual"){
   }
   return formatoInicial as FlujoResultado;
 
+}
+
+
+export function generarEstilosFlujo( tipoFragmentacion : string = "Mensual" ){
+  let estilo={
+    fila: 'text-center font-light ',
+    columna: 'text-center font-semibold text-gray-500 uppercase tracking-wider truncate xl:text-base md:text-sm text-xs ',
+    input : 'border-2 border-blue-300 shadow p-1 focus:outline-none focus:border-indigo-500 xl:text-base md:text-sm text-xs ',
+    titulo: 'font-semibold text-blue-700 text-left ',
+    subtitulo: 'pl-8 text-start font-light text-blue-500 truncate xl:w-64 lg:w-60 md:w-56 sm:w-40 w-36 xl:text-base md:text-sm text-xs ',
+    titulosubtitulo: 'font-semibold text-blue-700 truncate  text-left pl-8 text-start  xl:w-64 lg:w-60 md:w-56 sm:w-40 w-36 ',
+    nomDetalle: 'box xl:w-64 md:w-56 sm:w-40 w-36 '
+  } ;
+
+
+  tipoFragmentacion = tipoFragmentacion.toLowerCase();
+  switch(tipoFragmentacion){
+    case "mensual":
+      estilo.fila += "xl:w-24 w-20";
+      estilo.columna += " xl:w-24 w-20 ";
+      estilo.input += "xl:w-24 w-20";
+      break;
+    case "bimestral":
+      estilo.fila += "xl:w-44 md:w-32 w-20";
+      estilo.columna += "xl:w-44 md:w-32 w-20 ";
+      estilo.input += "xl:w-44 md:w-32 w-20 ";
+      break;
+    case "semestral":
+      estilo.fila += "xl:w-96 lg:w-80 md:w-72 sm:w-44 w-36";
+      estilo.columna += "xl:w-96 lg:w-80 md:w-72 sm:w-44 w-36 ";
+      estilo.input += "xl:w-96 lg:w-80 md:w-72 sm:w-44 w-36";
+      break;
+  }
+  return estilo ;
 }

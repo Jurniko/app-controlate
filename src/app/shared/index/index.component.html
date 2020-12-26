@@ -1,0 +1,38 @@
+
+
+
+<div class="h-full w-full">
+  <div class="bg-green-50 ">
+    <div class="text-5xl font-extrabold text-center ">
+      <span class="bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500">
+       App - Controlate
+      </span>
+    </div>
+    <p>
+    </p>
+  </div>
+
+  <div class="mx-auto bg-gray-800 pb-32 bg-no-repeat bg-cover" style="background-image: url('assets/bg/index-bg-integrantes.svg');">
+    <div class="text-5xl font-extrabold text-center py-16 ">
+      <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-200">
+       Grupo de Desarrollo
+      </span>
+    </div>
+    <div class="flex flex-wrap text-center justify-center">
+      <figure class="text-center mx-16" *ngFor="let integrante of integrantes">
+        <img [src]="integrante.urlImagen" class="rounded-full w-48 border-4 border-pink-600 border-opacity-75 shadow-xl">
+        <figcaption class="font-medium text-xl text-white">
+          {{integrante.apellido}}, <br>
+          {{integrante.nombre}}
+        </figcaption>
+      </figure>
+
+    </div>
+
+  </div>
+  <div class="bg-green-500 bg-contain bg-no-repeat bg-right-bottom h-full " style="background-image: url('assets/bg/index-footer.svg');">
+    <div class="h-64 text-center flex items-center justify-center">
+      <button class="py-2 px-16 bg-gradient-to-r from-blue-500 to-green-400 rounded-full text-white text-xl shadow-2xl hover:from-gray-500 hover:to-blue-400  focus:outline-none" (click)="cambiarRuta()"> Comenzar </button>
+    </div>
+  </div>
+</div>

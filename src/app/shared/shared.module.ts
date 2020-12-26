@@ -4,13 +4,15 @@ import { ButtonMComponent } from './button-m/button-m.component';
 import { InputMComponent } from './input-m/input-m.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
+import { IndexComponent } from './index/index.component';
 
 
 
 @NgModule({
   declarations: [
     ButtonMComponent,
-    InputMComponent
+    InputMComponent,
+    IndexComponent
   ],
   imports: [
     CommonModule,
