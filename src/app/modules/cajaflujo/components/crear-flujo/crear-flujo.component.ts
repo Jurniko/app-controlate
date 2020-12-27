@@ -18,11 +18,12 @@ import { CajaflujoService } from '../../services/cajaflujo.service';
 })
 export class CrearFlujoComponent implements OnInit {
   estaModoFlujo : boolean = true ;
+
   ingresoPeriodo0 : boolean = false;
   // ======== VARIABLES DE FLUJO ===========
   idPeriodo :  string = '';
   indicesConValores : any [][] = [];
-  flujoModoArray ?: any[][][];
+  flujoModoArray : any[][][] = [[[]]];
   fragmentacion : Fragmentacion [] = generarFragmentacion("Bimestral");
   propiedades : PropiedadFlujo[] = generarPropiedadesFlujo();
   flujo : Flujo = generarFlujoInicial("Bimestral");
@@ -31,6 +32,7 @@ export class CrearFlujoComponent implements OnInit {
   // ======== VARIABLES RESULTADOS ===========
   flujoResultado : FlujoResultado = generarFlujoResultado("Bimestral");
   parametroFragmentacion : string = "Bimestral";
+  
   propiedadesTotal = generarPropiedadesTotal();
   //===========VARIABLE DE ESTILO=============
   css = generarEstilosFlujo("Bimestral")
@@ -174,11 +176,8 @@ export class CrearFlujoComponent implements OnInit {
       // ===================== FLUJO FINANCIERO  =================
 
 
-      this.total?.seccion[seccionID][4]  = this.total?.seccion[seccionID][3];
-      console.log(this.total?.seccion[seccionID][3] , - this.flujo.seccion[seccionID].financiamiento.amortizacion , - this.flujo.seccion[seccionID].financiamiento.pago)
-      this.total?.seccion[seccionID][4] -= (this.flujo.seccion[seccionID].financiamiento.amortizacion + this.flujo.seccion[seccionID].financiamiento.pago)
-      console.log(this.total?.seccion[seccionID][4])
-      console.log(this.flujo)
+      (this.total?.seccion as any)[seccionID][4]  = this.total?.seccion[seccionID][3];
+      (this.total?.seccion as any)[seccionID][4]  -= (this.flujo.seccion[seccionID].financiamiento.amortizacion + this.flujo.seccion[seccionID].financiamiento.pago)
   }
 
   calculoSaldos(){

@@ -5,20 +5,27 @@
     <button-m tipo="cancelar" nombre="Atrás" (click)="atras()"></button-m>
     <div>
       <button-m tipo="registrar" nombre="Generar Reporte" (click)="terminarFlujo = true "></button-m>
-      <button-m tipo="registrar" nombre="Generar Flujo" (click)="estaModoFlujo=!estaModoFlujo ; calculoSaldos() ; rellenadoTerminado = true"></button-m>
+      <button-m tipo="registrar" nombre="Generar Flujo"
+        (click)="estaModoFlujo=!estaModoFlujo ; calculoSaldos() ; rellenadoTerminado = true"></button-m>
     </div>
   </div>
   <hr class="h-1 bg-yellow-600 border-none w-full shadow-xl">
   <div class="flex justify-between">
     <div class="font-semibold text-blue-700 text-left m-8">
-      <label > Inversion Total:
-        <input type="number" class="border-2 border-blue-300 shadow p-1 focus:outline-none focus:border-indigo-500 xl:w-24 w-20" (change)="this.flujo.inversion=$event.target.value" [value]="this.flujo.inversion">
+      <label> Inversion Total:
+        <input type="number"
+          class="border-2 border-blue-300 shadow p-1 focus:outline-none focus:border-indigo-500 xl:w-24 w-20"
+          (change)="this.flujo.inversion=$any($event.target).value" [value]="this.flujo.inversion">
       </label> <br> <br>
       <label> Prestamo:
-        <input type="number" class="border-2 border-blue-300 shadow p-1 focus:outline-none focus:border-indigo-500 xl:w-24 w-20" (change)="this.flujo.prestamo=$event.target.value" [value]="this.flujo.prestamo">
+        <input type="number"
+          class="border-2 border-blue-300 shadow p-1 focus:outline-none focus:border-indigo-500 xl:w-24 w-20"
+          (change)="this.flujo.prestamo= $any($event.target).value" [value]="this.flujo.prestamo">
       </label>
       <label> Tasa de Interes Anual:
-        <input type="number" class="border-2 border-blue-300 shadow p-1 focus:outline-none focus:border-indigo-500 xl:w-24 w-20" (change)="convertirTasaInteres($event.target.value) ; cuadroAmortizacion()" >
+        <input type="number"
+          class="border-2 border-blue-300 shadow p-1 focus:outline-none focus:border-indigo-500 xl:w-24 w-20"
+          (change)="convertirTasaInteres($any($event.target).value) ; cuadroAmortizacion()">
       </label>
 
       <button-m tipo="registrar" nombre="+" (click)="comenzarFlujo()"></button-m> <br> <!-- INICIAR CON EL PINTADO ! -->
@@ -32,67 +39,77 @@
   </div>
 
 
-    <table class="table-auto divide-solid m-auto"  [hidden]="!ingresoPeriodo0">
-      <thead>
-        <caption class="font-semibold text-blue-700">
-        <tr class="mx-auto divide-x-2 divide-blue-100 flex ">
-          <div colspan="2" [class]="css.nomDetalle"> Detalles </div>
-          <div [class]="css.columna"
-            *ngFor="let particion of fragmentacion[0].seccion ; let seccionID = index">
-            <button-m tipo="registrar" nombre="+" (click)="agregarValores(seccionID)"></button-m> <br>
+  <table class="table-auto divide-solid m-auto" [hidden]="!ingresoPeriodo0">
+    <thead>
+      <caption class="font-semibold text-blue-700">
+      <tr class="mx-auto divide-x-2 divide-blue-100 flex ">
+        <div colspan="2" [class]="css.nomDetalle"> Detalles </div>
+        <div [class]="css.columna" *ngFor="let particion of fragmentacion[0].seccion ; let seccionID = index">
+          <button-m tipo="registrar" nombre="+" (click)="agregarValores(seccionID)"></button-m> <br>
 
-            {{particion.meses}}
-          </div>
-        </tr>
+          {{particion.meses}}
+        </div>
+      </tr>
       </caption>
-      </thead>
-      <!--
+    </thead>
+    <!--
         PREDEFINIR EN VARIABLES, PADDING PARA SEMESTRAL, MENSUAL, ETC
       -->
-      <tbody class="w-full" [hidden]="!estaModoFlujo">
-          <caption [class]="css.titulo" *ngFor="let fila of propiedades; let filaID = index" > <!-- CADA FILA DEBE TENER UN ID -->
-            {{fila.titulo}}
-            <tr  *ngFor="let subtitulo of fila.subtitulos ; let subtituloID = index" class="flex"><!-- class="divide-x-2 divide-blue-100"  -->
-              <div [class]="css.subtitulo">
-                {{subtitulo}}
+    <tbody class="w-full" [hidden]="!estaModoFlujo">
+      <caption [class]="css.titulo" *ngFor="let fila of propiedades; let filaID = index">
+        <!-- CADA FILA DEBE TENER UN ID -->
+        {{fila.titulo}}
+      <tr *ngFor="let subtitulo of fila.subtitulos ; let subtituloID = index" class="flex">
+        <!-- class="divide-x-2 divide-blue-100"  -->
+        <div [class]="css.subtitulo">
+          {{subtitulo}}
 
-              </div>
-              <div [class]="css.fila" *ngFor="let seccion of fragmentacion[0].seccion ; let seccionID = index"> <!-- SEMESTRAL TIENE 2 SECCIONES, ESTO YA ESTA ESTABLECIDO EN EL JSON-->
-                <input type="number" [class]="css.input" (change)="valorInput(seccionID,filaID,subtituloID,$event.target.value)"
-                [value]="ingresoPeriodo0 == true ? flujoModoArray[seccionID][filaID][subtituloID] : 0" [disabled]="rellenadoTerminado" >
-                 <!--  FILA PARA SABER SI ESTA EN INGRESOS, EGRESOS O ETC | SUBTITULO SI SE REFIERE APORTES, VENTA U OTROS ... | SECCION SI PERTENECE A LA SECCIÓN UNO O DOS, O TRES ... -->
-              </div>
-            </tr>
-          </caption>
-      </tbody>
-      <hr class="h-1 bg-green-400 my-4 border-none"  [hidden]="!estaModoFlujo">
+        </div>
+        <div [class]="css.fila" *ngFor="let seccion of fragmentacion[0].seccion ; let seccionID = index">
+          <!-- SEMESTRAL TIENE 2 SECCIONES, ESTO YA ESTA ESTABLECIDO EN EL JSON-->
+          <input type="number" [class]="css.input"
+            (change)="valorInput(seccionID,filaID,subtituloID,$any($event.target).value)"
+            [value]="ingresoPeriodo0 == true ? flujoModoArray[seccionID][filaID][subtituloID] : 0"
+            [disabled]="rellenadoTerminado">
+          <!--  FILA PARA SABER SI ESTA EN INGRESOS, EGRESOS O ETC | SUBTITULO SI SE REFIERE APORTES, VENTA U OTROS ... | SECCION SI PERTENECE A LA SECCIÓN UNO O DOS, O TRES ... -->
+        </div>
+      </tr>
+      </caption>
+    </tbody>
+    <hr class="h-1 bg-green-400 my-4 border-none" [hidden]="!estaModoFlujo">
 
-      <tfoot *ngIf="rellenadoTerminado">
-        <caption  *ngFor="let fila of propiedadesTotal; let filaID = index"  > <!-- CADA FILA DEBE TENER UN ID -->
-          <tr class="flex"><!-- class="divide-x-2 divide-blue-100"  -->
-            <div [class]="css.titulosubtitulo">
-             {{fila.titulo}}
-            </div>
-            <div [class]="css.fila"  *ngFor="let seccion of fragmentacion[0].seccion ; let seccionID = index"  > <!-- SEMESTRAL TIENE 2 SECCIONES, ESTO YA ESTA ESTABLECIDO EN EL JSON-->
-              <input type="number" [class]="css.input" [value]="total.seccion[seccionID][filaID]" disabled="true" >
-            </div>
-          </tr>
-        </caption>
+    <tfoot *ngIf="rellenadoTerminado">
+      <caption *ngFor="let fila of propiedadesTotal; let filaID = index">
+        <!-- CADA FILA DEBE TENER UN ID -->
+      <tr class="flex">
+        <!-- class="divide-x-2 divide-blue-100"  -->
+        <div [class]="css.titulosubtitulo">
+          {{fila.titulo }}
+        </div>
+        <div [class]="css.fila" *ngFor="let seccion of fragmentacion[0].seccion ; let seccionID = index">
+          <!-- SEMESTRAL TIENE 2 SECCIONES, ESTO YA ESTA ESTABLECIDO EN EL JSON-->
+          <input type="number" [class]="css.input" [value]="total.seccion[seccionID][filaID]" disabled="true">
+        </div>
+      </tr>
+      </caption>
 
-      </tfoot >
+    </tfoot>
 
-      <tfoot *ngIf="!rellenadoTerminado">
-        <caption  *ngFor="let fila of propiedades; let filaID = index"  > <!-- SOLO MOSTRATA LOS TRES PRINCIPALES -->
-          <tr class="flex"><!-- class="divide-x-2 divide-blue-100"  -->
-            <div [class]="css.titulosubtitulo">
-            {{fila.titulo}}
-            </div>
-            <div [class]="css.fila"  *ngFor="let seccion of fragmentacion[0].seccion ; let seccionID = index"  > <!-- SEMESTRAL TIENE 2 SECCIONES, ESTO YA ESTA ESTABLECIDO EN EL JSON-->
-              <input type="number" [class]="css.input" [value]="total.seccion[seccionID][filaID]" disabled="true" >
-            </div>
-          </tr>
-        </caption>
-      </tfoot>
-    </table>
+    <tfoot *ngIf="!rellenadoTerminado">
+      <caption *ngFor="let fila of propiedades; let filaID = index">
+        <!-- SOLO MOSTRATA LOS TRES PRINCIPALES -->
+      <tr class="flex">
+        <!-- class="divide-x-2 divide-blue-100"  -->
+        <div [class]="css.titulosubtitulo">
+          {{fila.titulo}}
+        </div>
+        <div [class]="css.fila" *ngFor="let seccion of fragmentacion[0].seccion ; let seccionID = index">
+          <!-- SEMESTRAL TIENE 2 SECCIONES, ESTO YA ESTA ESTABLECIDO EN EL JSON-->
+          <input type="number" [class]="css.input" [value]="total.seccion[seccionID][filaID]" disabled="true">
+        </div>
+      </tr>
+      </caption>
+    </tfoot>
+  </table>
 
 </div>

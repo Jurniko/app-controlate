@@ -13,7 +13,7 @@ export class PeriodosComponent implements OnInit {
 
   constructor(private route:Router, private cajaflujoService:CajaflujoService) {}
 
-  periodos?: Periodo[] ;
+  periodos: Periodo[] =  [];
 
   ngOnInit(): void {
     this.getPeriodos$();
@@ -28,7 +28,7 @@ export class PeriodosComponent implements OnInit {
       data=>{this.periodos = data})
   }
 
-  crearFlujo( id: string){
+  crearFlujo( id: string  | undefined){
     console.log(id)
     this.route.navigate(['cajaflujo/crear-flujo/'+id])
   }

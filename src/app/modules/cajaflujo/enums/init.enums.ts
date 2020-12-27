@@ -138,7 +138,7 @@ export function generarPropiedadesFlujo() : PropiedadFlujo[]{
 }
 
 
-export function generarPropiedadesTotal() : object[] {
+export function generarPropiedadesTotal() : [{titulo:string}] {
   let propiedades = [
     {titulo: "Total Ingresos"},
     {titulo: "Total Egresos"},
@@ -148,13 +148,13 @@ export function generarPropiedadesTotal() : object[] {
     {titulo: "Saldo Inicial"},
     {titulo: "Saldo Final"}
   ]
-    return propiedades;
+    return propiedades as [{titulo:string}];
 }
 
 
 
 
-export function generarTotalFlujo(tipoFragmentacion :string ="Mensual"){
+export function generarTotalFlujo(tipoFragmentacion :string ="Mensual") : {seccion:[any]} {
   /*
   * seccion : [ {
     totalIngreso : 0,
@@ -209,7 +209,7 @@ export function generarTotalFlujo(tipoFragmentacion :string ="Mensual"){
       }
       break;
   }
-  return formatoInicial;
+  return formatoInicial as any;
 }
 
 
