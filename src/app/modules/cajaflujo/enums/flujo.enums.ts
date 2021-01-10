@@ -19,7 +19,6 @@ export function generarFlujoInicial(tipoFragmentacion:string = "Mensual") : Fluj
         compraMercancia : 0,
         salarios : 0,
         consumoEnergia : 0,
-        impuestos : 0,
         servicosPublicos : 0,
         alquiler : 0,
         publicidad : 0,

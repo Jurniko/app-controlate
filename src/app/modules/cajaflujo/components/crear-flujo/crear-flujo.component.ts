@@ -51,7 +51,7 @@ export class CrearFlujoComponent implements OnInit {
     ]
   }
   */
- 
+
   constructor(private rutaActiva:ActivatedRoute, private cajaFlujoService: CajaflujoService, private route:Router) { }
 
   ngOnInit(): void {
@@ -159,13 +159,16 @@ export class CrearFlujoComponent implements OnInit {
           })
         }else if( j==2 ){ // valor
           //console.log(nombreTitulo,nombrePropiedad, indicesPertenecientesSeccion[i][j])
+          let valorIngresado = +indicesPertenecientesSeccion[i][j] - +myflujoSeccion[nombreTitulo][nombrePropiedad] ;
+
           myflujoSeccion[nombreTitulo][nombrePropiedad] = indicesPertenecientesSeccion[i][j]; // le Actualizamos el valor
           /*
           * ENTRA POR CADA TITULO !!!!!
           ! NO FUNCIONA EL -= Number() en vez de restar SUMA!!
           */
-          let valorIngresado = +indicesPertenecientesSeccion[i][j];
 
+
+          //this.total.seccion[seccionID][idTitulo] -= this.total.seccion[seccionID][idTitulo]; // le quitamos el anterior valor y le agregamos l nuevo
           this.total.seccion[seccionID][idTitulo] +=  valorIngresado; // Almacenamos el total sumando por cada titulo
 
           // ===================== FLUJO ECONOMICO =================

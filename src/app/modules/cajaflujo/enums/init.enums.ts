@@ -116,7 +116,6 @@ export function generarPropiedadesFlujo() : PropiedadFlujo[]{
     "Compra de Mercancía",
     "Salarios",
     "Consumo de Energía",
-    "Impuestos",
     "Servicios Públicos",
     "Alquiler",
     "Publicidad",
