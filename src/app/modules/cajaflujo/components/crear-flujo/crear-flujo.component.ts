@@ -1,5 +1,5 @@
 import { IfStmt } from '@angular/compiler';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { generarFlujoInicial } from '../../enums/flujo.enums';
@@ -10,6 +10,8 @@ import { Fragmentacion } from '../../interfaces/fragmentacion';
 import { Periodo } from '../../interfaces/periodo';
 import { PropiedadFlujo } from '../../interfaces/propiedadFlujo';
 import { CajaflujoService } from '../../services/cajaflujo.service';
+
+//declare let html2canvas: any;
 
 @Component({
   selector: 'app-crear-flujo',
@@ -24,20 +26,20 @@ export class CrearFlujoComponent implements OnInit {
   idPeriodo :  string = '';
   indicesConValores : any [][] = [];
   flujoModoArray : any[][][] = [[[]]];
-  fragmentacion : Fragmentacion [] = generarFragmentacion("Bimestral");
+  fragmentacion : Fragmentacion [] = generarFragmentacion();
   propiedades : PropiedadFlujo[] = generarPropiedadesFlujo();
-  flujo : Flujo = generarFlujoInicial("Bimestral");
+  flujo : Flujo = generarFlujoInicial();
 
-  total  = generarTotalFlujo("Bimestral");
+  total  = generarTotalFlujo();
   // ======== VARIABLES RESULTADOS ===========
-  flujoResultado : FlujoResultado = generarFlujoResultado("Bimestral");
-  parametroFragmentacion : string = "Bimestral";
-  
+  flujoResultado : FlujoResultado = generarFlujoResultado();
+  parametroFragmentacion : string = "";
   propiedadesTotal = generarPropiedadesTotal();
   //===========VARIABLE DE ESTILO=============
-  css = generarEstilosFlujo("Bimestral")
-  terminarFlujo: boolean = false
+  css = generarEstilosFlujo();
+  terminarFlujo: boolean = false;
   rellenadoTerminado:boolean = false;
+
   /* {
     seccion: [
       {ingresos : 100,
@@ -49,17 +51,22 @@ export class CrearFlujoComponent implements OnInit {
     ]
   }
   */
+ 
   constructor(private rutaActiva:ActivatedRoute, private cajaFlujoService: CajaflujoService, private route:Router) { }
 
   ngOnInit(): void {
+
     this.rutaActiva.params.subscribe((params:Params)=>{
       console.log(params)
-      this.flujo.year = params.year;
-      this.flujo.tipoFragmentacion = params.tipoFragmentacion;
+
+      console.log(this.flujo)
       this.parametroFragmentacion = params.tipoFragmentacion;
-      this.idPeriodo = params.id
+      this.idPeriodo = params.id;
+      this.init();
+
+      this.flujo.tipoFragmentacion = params.tipoFragmentacion;
+      this.flujo.year = params.year;
     })
-    this.init();
 
   }
 
@@ -281,6 +288,14 @@ export class CrearFlujoComponent implements OnInit {
     this.flujo.tasa = (Math.pow(+tasaAnual+1,1/12)-1)
     console.log(this.flujo.tasa,"TASA CONVERTIDA")
   }
+
+  finalizar(){
+    this.ingresoPeriodo0 = true;
+    this.estaModoFlujo = true;
+    this.terminarFlujo = true;
+  }
+
+
 
   atras(){
     this.route.navigate(['cajaflujo/'])

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import html2canvas from 'html2canvas'
+
 
 @Component({
   selector: 'modal-terminar-flujo',
@@ -15,5 +17,17 @@ export class TerminarFlujoComponent implements OnInit {
 
   nuevoFlujo(){
     this.route.navigate(["cajaflujo"])
+  }
+
+  capturarPantalla(){
+    let secccion = document.querySelector("#imagenPDF");
+    html2canvas(secccion as any).then( (canvas : any) =>{
+      var link = document.createElement('a');
+      link.href = canvas.toDataURL();
+      link.download = "Capture.jpg";
+      //document.body.appendChild(link);
+      link.click()
+    })
+
   }
 }
