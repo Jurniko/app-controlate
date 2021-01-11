@@ -114,7 +114,6 @@ export function generarPropiedadesFlujo() : PropiedadFlujo[]{
     subtitulos: [
     "Compra de Mercancía",
     "Salarios",
-    "Consumo de Energía",
     "Servicios Públicos",
     "Alquiler",
     "Publicidad",

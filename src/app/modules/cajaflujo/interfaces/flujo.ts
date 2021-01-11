@@ -20,7 +20,6 @@ export interface PropiedadesFlujo{
     egresos:{
       compraMercancia: number
       salarios:number
-      consumoEnergia:number
       servicosPublicos:number
       alquiler:number
       publicidad:number

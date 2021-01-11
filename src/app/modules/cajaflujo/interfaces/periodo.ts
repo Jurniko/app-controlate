@@ -21,7 +21,6 @@ let test  = {
       egresos:{
           compraMercancia: 2000,
           salarios:2600,
-          consumoEnergia:150,
           servicosPublicos:150
           //....
       }
