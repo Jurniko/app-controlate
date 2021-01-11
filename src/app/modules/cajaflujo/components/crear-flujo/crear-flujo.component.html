@@ -19,7 +19,14 @@
             <input type="number"
               class="border-2 border-blue-300 shadow p-1 focus:outline-none focus:border-indigo-500 xl:w-24 w-20"
               (change)="this.flujo.inversion=$any($event.target).value" [value]="this.flujo.inversion">
-          </label> <br> <br>
+          </label>
+          <label> Costo de oportunidad:
+            <input type="number"
+              class="border-2 border-blue-300 shadow p-1 focus:outline-none focus:border-indigo-500 xl:w-24 w-20"
+              (change)="this.flujo.tasaOportunidad=$any($event.target).value" [value]="this.flujo.tasaOportunidad">
+          </label>
+
+          <br> <br>
           <label> Prestamo:
             <input type="number"
               class="border-2 border-blue-300 shadow p-1 focus:outline-none focus:border-indigo-500 xl:w-24 w-20"

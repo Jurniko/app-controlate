@@ -199,16 +199,20 @@ export class CrearFlujoComponent implements OnInit {
         e[5] = this.flujo.prestamo - this.flujo.inversion // EL SALDO INICIAL PRIMER PERIODO = Prestamo - Inversion
         console.log(e[5] , " Primer saldo inicial periodo 1 ")
         e[6] = e[5] + e[4]; // Saldo final = saldo inicial ([5])+ flujo de caja financiero ([4])
+        console.log("Caja Financiera",e[4])
 
-      
-        this.van += +(e[4]/Math.pow(1 + +this.flujo.tasa, periodo)).toFixed(3)
+        this.van += +(e[4]/Math.pow(1 + +this.flujo.tasaOportunidad, periodo)).toFixed(3)
+        console.log("VAN",this.van)
         periodo++;
       }else{
         console.log("segundo periodo, saldo inicial", this.total?.seccion[indiceSeccion-1][6])
         e[5] = this.total?.seccion[indiceSeccion-1][6]; // Una seccion anterir y que tome saldo final [6]
         e[6] = e[5] + e[4];
+        console.log("Caja Financiera",e[4])
 
-        this.van += +(e[4]/Math.pow(1 + +this.flujo.tasa, periodo)).toFixed(3)
+
+        this.van += +(e[4]/Math.pow(1 + +this.flujo.tasaOportunidad, periodo)).toFixed(3)
+        console.log("VAN",this.van)
         periodo++;
       }
     })
@@ -304,11 +308,6 @@ export class CrearFlujoComponent implements OnInit {
     this.estaModoFlujo = true;
     this.terminarFlujo = true;
   }
-
-  calcularVANTIR(){
-
-  }
-
 
   atras(){
     this.route.navigate(['cajaflujo/'])

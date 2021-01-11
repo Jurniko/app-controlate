@@ -1,6 +1,5 @@
 import { clonarObjeto } from "src/app/utils/clonar-objeto";
 import { FlujoResultado, SeccionFlujoResultado } from "../interfaces/cajaflujo";
-import { PropiedadesFlujo } from "../interfaces/flujo";
 import { Fragmentacion} from "../interfaces/fragmentacion";
 import { PropiedadFlujo } from "../interfaces/propiedadFlujo";
 
@@ -126,7 +125,6 @@ export function generarPropiedadesFlujo() : PropiedadFlujo[]{
   {
     titulo : "Financiamiento",
     subtitulos: [
-    "Préstamos recibidos",
     "Intereses",
     "Amortización",
   ]

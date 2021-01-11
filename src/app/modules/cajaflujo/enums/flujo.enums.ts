@@ -26,7 +26,6 @@ export function generarFlujoInicial(tipoFragmentacion:string = "Mensual") : Fluj
         otros : 0,
     },
     financiamiento : {
-      prestamos  : 0,
       pago  : 0,
       amortizacion  : 0,
     }
@@ -39,6 +38,7 @@ export function generarFlujoInicial(tipoFragmentacion:string = "Mensual") : Fluj
       flujoInicial = {
         inversion: 0,
         prestamo:0,
+        tasaOportunidad:0,
         tasa:0,
         seccion: [
           clonarObjeto(propiedadInicial), //Enero
@@ -60,6 +60,7 @@ export function generarFlujoInicial(tipoFragmentacion:string = "Mensual") : Fluj
       flujoInicial = {
         inversion: 0,
         prestamo:0,
+        tasaOportunidad:0,
         tasa:0,
         seccion:[
           clonarObjeto(propiedadInicial), //Enero, Febrero
@@ -75,6 +76,7 @@ export function generarFlujoInicial(tipoFragmentacion:string = "Mensual") : Fluj
       flujoInicial = {
         inversion: 0,
         prestamo:0,
+        tasaOportunidad:0,
         tasa:0,
         seccion: [
           clonarObjeto(propiedadInicial), //Enero, Febrero, Marzo, Abril, Mayo, Junio

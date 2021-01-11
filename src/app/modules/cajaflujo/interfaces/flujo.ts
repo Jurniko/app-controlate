@@ -4,6 +4,7 @@ export interface Flujo{
     inversion : number
     prestamo : number
     tasa : number
+    tasaOportunidad : number
     year? : number
     tipoFragmentacion ?: string
     seccion: PropiedadesFlujo[]
@@ -27,7 +28,6 @@ export interface PropiedadesFlujo{
       otros:number
     }
     financiamiento : {
-    prestamos : number
     pago : number
     amortizacion :number
   }
