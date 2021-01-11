@@ -29,7 +29,6 @@ export class PeriodosComponent implements OnInit {
   }
 
   crearFlujo( id: string  | undefined){
-    console.log(id)
     this.route.navigate(['cajaflujo/crear-flujo/'+id])
   }
 

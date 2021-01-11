@@ -1,7 +1,6 @@
 <div class="w-full h-screen bg-center bg-cover bg-no-repeat  bg-yellow-50 "  >
   <div class="static top-0 w-full h-screen bg-center bg-cover bg-no-repeat z-0" style="background-image: url('assets/bg/b-h-cj.svg');"  >
     <form class=" z-25 rounded shadow-xl mx-auto xl:w-3/12 lg:w-4/12 md:w-6/12 sm:w-8/12 p-4 py-8  " [formGroup]="form" (ngSubmit)="onSubmit()">
-
       <input-m label="Año" type="select" [dataSelect]="anos" [controlForm]="form" controlName="ano"> </input-m>
       <span></span>
       <input-m label="Fragmentación" type="select" [dataSelect]="fragmentaciones" [controlForm]="form" controlName="fragmentacion"></input-m>
@@ -10,12 +9,7 @@
         <button-m nombre="Atras" tipo="cancelar" (click)="regresar()"> </button-m>
         <button-m nombre="Continuar" tipo="registrar" (click)=" cambiarRuta()" > </button-m>
       </div>
-
-
     </form>
-
-
-
     <div  class="absolute bottom-0 bg-bottom bg-cover bg-no-repeat h-1/2 w-full z-0 " style="background-image: url('assets/bg/b-f-cj.svg');">
     </div>
   </div>
