@@ -39,7 +39,9 @@ export class CrearFlujoComponent implements OnInit {
   css = generarEstilosFlujo();
   terminarFlujo: boolean = false;
   rellenadoTerminado:boolean = false;
-
+  // =========== VARIABLE PARA CALCULAR EL VAN Y EL TIR ==============
+  van : number = 0;
+  tir : number = 0 ;
   /* {
     seccion: [
       {ingresos : 100,
@@ -191,16 +193,23 @@ export class CrearFlujoComponent implements OnInit {
   }
 
   calculoSaldos(){
+    let periodo = 1 ;
     this.total?.seccion.map((e : any, indiceSeccion)=>{
       if(e[5]==0 && indiceSeccion == 0){ // cuando se esta calculando primera vez
         e[5] = this.flujo.prestamo - this.flujo.inversion // EL SALDO INICIAL PRIMER PERIODO = Prestamo - Inversion
         console.log(e[5] , " Primer saldo inicial periodo 1 ")
         e[6] = e[5] + e[4]; // Saldo final = saldo inicial ([5])+ flujo de caja financiero ([4])
 
+      
+        this.van += +(e[4]/Math.pow(1 + +this.flujo.tasa, periodo)).toFixed(3)
+        periodo++;
       }else{
         console.log("segundo periodo, saldo inicial", this.total?.seccion[indiceSeccion-1][6])
         e[5] = this.total?.seccion[indiceSeccion-1][6]; // Una seccion anterir y que tome saldo final [6]
         e[6] = e[5] + e[4];
+
+        this.van += +(e[4]/Math.pow(1 + +this.flujo.tasa, periodo)).toFixed(3)
+        periodo++;
       }
     })
     console.log(this.total , "TOTAL DE TOTALES")
@@ -254,13 +263,11 @@ export class CrearFlujoComponent implements OnInit {
 
       acumuladorIntereses += interes;
       acumuladorAmortizacion += amortizacion;
-      console.log("interes",interes )
-      console.log("amor",amortizacion )
-      console.log("si",saldoInicial )
-      console.log("sf",saldoFinal )
-      if(this.parametroFragmentacion.toLowerCase() == "semestral" && mes == 6){
+
+      if(this.parametroFragmentacion.toLowerCase() == "semestral" && (mes%6) == 0){
+        console.log("Estoy dentro")
         this.flujo.seccion[indiceSeccion].financiamiento.pago =  acumuladorIntereses;
-        this.flujo.seccion[indiceSeccion].financiamiento.amortizacion = acumuladorIntereses;
+        this.flujo.seccion[indiceSeccion].financiamiento.amortizacion = acumuladorAmortizacion;
         acumuladorIntereses = 0 ;
         acumuladorAmortizacion = 0;
         indiceSeccion ++ ;
@@ -298,6 +305,9 @@ export class CrearFlujoComponent implements OnInit {
     this.terminarFlujo = true;
   }
 
+  calcularVANTIR(){
+
+  }
 
 
   atras(){

@@ -95,6 +95,19 @@
           </div>
         </tr>
         </caption>
+        <caption>
+          <tr class="flex">
+            <!-- class="divide-x-2 divide-blue-100"  -->
+            <div [class]="css.titulosubtitulo">
+              VAN
+            </div>
+            <div [class]="css.fila">
+              <!-- SEMESTRAL TIENE 2 SECCIONES, ESTO YA ESTA ESTABLECIDO EN EL JSON-->
+              <input type="number" [class]="css.input" [value]="van" disabled="true">
+            </div>
+
+          </tr>
+        </caption>
 
       </tfoot>
 
@@ -112,6 +125,7 @@
           </div>
         </tr>
         </caption>
+
       </tfoot>
     </table>
   </div>
